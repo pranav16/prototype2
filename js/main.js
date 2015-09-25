@@ -2,6 +2,11 @@ var frames = [];
 var frameRate = 1000/10;
 var context;
 var canvas;
+var numberOflanes = 4;
+var laneSize = 0;
+var gameState = "init";
+var imageLoadCount = 0;
+var maxImageSize = 7;
 
 
 var player = {
@@ -9,6 +14,7 @@ var player = {
 	y : 100,
 	state : "walking",
 	currentAnimationKey : 0,
+	currentLane : 0,
 	idleFrames : [],
 	
 	changeState :function (state){
@@ -54,21 +60,67 @@ function init()
 					'art/marioWalk/6.png',
      				'art/marioWalk/7.png',
 					];
-	
-	for ( var i=0; i<assests.length; i++ )
+	maxImageSize = assests.length;
+	for ( var i = 0; i < assests.length; i++ )
 	{
 		player.idleFrames.push(new Image());
 		player.idleFrames[i].src = assests[i];
+		player.idleFrames[i].onload = function () {
+			imageLoadCount++;
+		}
 	}
-	setInterval(update,frameRate);
+	 
+	   setInterval(update,frameRate);
+
 }
+
+$(document).bind("keydown.up", function() { 
+
+if(player.currentLane == 0)
+	return;
+else 
+{
+	player.currentLane--;
+	player.y -= laneSize;
+}
+
+
+});
+
+$(document).bind("keydown.down", function() { 
+
+if(player.currentLane == (numberOflanes - 1))
+	return;
+else 
+{
+	player.currentLane++;
+	player.y += laneSize;
+}
+
+
+});
+
 
 
 var update = function()
 {
+	 
+	 if(gameState == "init" && maxImageSize == imageLoadCount )
+	 {
+		 player.x = canvas.width * 0.7;
+		 player.y = 2 * player.idleFrames[0].width;
+		 laneSize = (canvas.height - 2* player.idleFrames[0].width)/numberOflanes;
+		 console.log(laneSize);
+		 gameState = "playing";
+	 }
+	
+	
+	if(gameState != "playing")
+		return;
+    console.log(player.currentLane);
 	draw();
 	
-	player.x = (player.x  + 15) % canvas.width ;
+	
 	
 }
 
