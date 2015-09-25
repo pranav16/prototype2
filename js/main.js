@@ -7,7 +7,18 @@ var laneSize = 0;
 var gameState = "init";
 var imageLoadCount = 0;
 var maxImageSize = 7;
+var mail;
+var laneOne = [];
+var laneTwo = [];
+var laneThree = [];
+var laneFout = [];
 
+function collides(a, b) {
+  return a.x < b.x + b.width &&
+         a.x + a.width > b.x &&
+         a.y < b.y + b.height &&
+         a.y + a.height > b.y;
+}
 
 var player = {
 	x : 100,
@@ -60,6 +71,8 @@ function init()
 					'art/marioWalk/6.png',
      				'art/marioWalk/7.png',
 					];
+    
+					
 	maxImageSize = assests.length;
 	for ( var i = 0; i < assests.length; i++ )
 	{
@@ -69,9 +82,8 @@ function init()
 			imageLoadCount++;
 		}
 	}
-	 
-	   setInterval(update,frameRate);
-
+	
+	setInterval(update,frameRate);
 }
 
 $(document).bind("keydown.up", function() { 
@@ -111,12 +123,31 @@ var update = function()
 		 player.y = 2 * player.idleFrames[0].width;
 		 laneSize = (canvas.height - 2* player.idleFrames[0].width)/numberOflanes;
 		 console.log(laneSize);
+		 for(var i = 0; i< 100 ;i++)
+	   {
+		 var xPosition = 400 * i * -1;
+		 console.log(xPosition);
+		 var maxDisplacement = canvas.width * 0.5;
+		 var state = false;
+		 var type = Math.floor((Math.random() * 3));
+		laneOne[i] = new Mail(type,xPosition,player.y,maxDisplacement,state);
+		laneOne[i].init();
+	   }
+		 
 		 gameState = "playing";
 	 }
 	
 	
 	if(gameState != "playing")
 		return;
+	for(var i = 0;i < 100;i++)
+		{	
+	
+			if(i > 0 && laneOne[i].getPostionX() <= (laneOne[i-1].getPostionX() - 80))
+		 	laneOne[i].update();
+		else if(i == 0)
+			laneOne[i].update();
+		}
     console.log(player.currentLane);
 	draw();
 	
@@ -127,4 +158,12 @@ var update = function()
 var draw = function()
 {
 		player.draw();
+		for(var i = 0;i < 100;i++)
+		{
+			
+		 	laneOne[i].draw(context);
+		}
+		
+		
+		
 }
