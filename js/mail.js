@@ -65,7 +65,7 @@
 	this.update = function()
 	{
 		
-        if(this.x >= this.maxDisplacement)
+        if(this.x >= this.maxDisplacement && this.x < 40000 )
 		{
 			this.x = this.maxDisplacement;
 			this.isActive = true;
@@ -73,7 +73,7 @@
 		}
 		else
 		{
-			 this.x += 20;	
+			 this.x += 5;	
 		}
      	
 		

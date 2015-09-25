@@ -11,14 +11,7 @@ var mail;
 var laneOne = [];
 var laneTwo = [];
 var laneThree = [];
-var laneFout = [];
-
-function collides(a, b) {
-  return a.x < b.x + b.width &&
-         a.x + a.width > b.x &&
-         a.y < b.y + b.height &&
-         a.y + a.height > b.y;
-}
+var laneFour = [];
 
 var player = {
 	x : 100,
@@ -98,6 +91,17 @@ else
 
 
 });
+$(document).bind("keydown.space", function() { 
+
+if (player.currentLane == 0)
+{
+	var postionX = 40000;
+	laneOne[0].setpostion(postionX);
+}
+
+
+
+});
 
 $(document).bind("keydown.down", function() { 
 
@@ -111,7 +115,85 @@ else
 
 
 });
+var updateLanes = function (){
 
+for(var i = 0;i < 100;i++)
+{	
+	
+	
+		if(i > 0 && laneOne[i].getPostionX() <= (laneOne[i-1].getPostionX() - 80))
+		 	laneOne[i].update();
+		else if(i == 0)
+			laneOne[i].update();
+
+
+		if(i > 0 && laneTwo[i].getPostionX() <= (laneTwo[i-1].getPostionX() - 80))
+		 	laneTwo[i].update();
+		else if(i == 0)
+			laneTwo[i].update();
+	
+			if(i > 0 && laneThree[i].getPostionX() <= (laneThree[i-1].getPostionX() - 80))
+		 	laneThree[i].update();
+		else if(i == 0)
+			laneThree[i].update();
+	
+		if(i > 0 && laneFour[i].getPostionX() <= (laneFour[i-1].getPostionX() - 80))
+		 	laneFour[i].update();
+		else if(i == 0)
+			laneFour[i].update();
+		
+	}	
+}
+
+
+var initLanes = function(){
+	var positionY = player.y;
+	 for(var i = 0; i< 100 ;i++)
+	   {
+		 var xPosition = 400 * i * -1;
+		 console.log(xPosition);
+		 var maxDisplacement = canvas.width * 0.5;
+		 var state = false;
+		 var type = Math.floor((Math.random() * 3));
+		laneOne[i] = new Mail(type,xPosition,positionY,maxDisplacement,state);
+		laneOne[i].init();
+	   }
+	   positionY += laneSize;
+	    for(var i = 0; i< 100 ;i++)
+	   {
+		 var xPosition = 400 * i * -1;
+		 console.log(xPosition);
+		 var maxDisplacement = canvas.width * 0.5;
+		 var state = false;
+		 var type = Math.floor((Math.random() * 3));
+		 
+		laneTwo[i] = new Mail(type,xPosition,positionY ,maxDisplacement,state);
+		laneTwo[i].init();
+	   }
+	   positionY += laneSize;
+	    for(var i = 0; i< 100 ;i++)
+	   {
+		 var xPosition = 400 * i * -1;
+		 console.log(xPosition);
+		 var maxDisplacement = canvas.width * 0.5;
+		 var state = false;
+		 var type = Math.floor((Math.random() * 3));
+		laneThree[i] = new Mail(type,xPosition,positionY,maxDisplacement,state);
+		laneThree[i].init();
+	   }
+	   positionY += laneSize;
+	    for(var i = 0; i< 100 ;i++)
+	   {
+		 var xPosition = 400 * i * -1;
+		 console.log(xPosition);
+		 var maxDisplacement = canvas.width * 0.5;
+		 var state = false;
+		 var type = Math.floor((Math.random() * 3));
+		laneFour[i] = new Mail(type,xPosition,positionY,maxDisplacement,state);
+		laneFour[i].init();
+	   }
+	   
+} 
 
 
 var update = function()
@@ -123,16 +205,7 @@ var update = function()
 		 player.y = 2 * player.idleFrames[0].width;
 		 laneSize = (canvas.height - 2* player.idleFrames[0].width)/numberOflanes;
 		 console.log(laneSize);
-		 for(var i = 0; i< 100 ;i++)
-	   {
-		 var xPosition = 400 * i * -1;
-		 console.log(xPosition);
-		 var maxDisplacement = canvas.width * 0.5;
-		 var state = false;
-		 var type = Math.floor((Math.random() * 3));
-		laneOne[i] = new Mail(type,xPosition,player.y,maxDisplacement,state);
-		laneOne[i].init();
-	   }
+		initLanes();
 		 
 		 gameState = "playing";
 	 }
@@ -140,20 +213,15 @@ var update = function()
 	
 	if(gameState != "playing")
 		return;
-	for(var i = 0;i < 100;i++)
-		{	
 	
-			if(i > 0 && laneOne[i].getPostionX() <= (laneOne[i-1].getPostionX() - 80))
-		 	laneOne[i].update();
-		else if(i == 0)
-			laneOne[i].update();
-		}
+	updateLanes();
     console.log(player.currentLane);
 	draw();
-	
-	
-	
+		
 }
+
+
+
 
 var draw = function()
 {
@@ -163,7 +231,20 @@ var draw = function()
 			
 		 	laneOne[i].draw(context);
 		}
-		
-		
+		for(var i = 0;i < 100;i++)
+		{
+			
+		 	laneTwo[i].draw(context);
+		}
+		for(var i = 0;i < 100;i++)
+		{
+			
+		 	laneThree[i].draw(context);
+		}
+		for(var i = 0;i < 100;i++)
+		{
+			
+		 	laneFour[i].draw(context);
+		}
 		
 }
