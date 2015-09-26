@@ -8,7 +8,7 @@
 		this.image ;
 		this.enemyAssets = ['art/Enemies/blue.png','art/Enemies/green.png','art/Enemies/red.png'];
         this.isActive = isready;	
-		this.isReady = isready;
+		
 		
 		this.getType = function(){
 			return this.type;
@@ -26,6 +26,10 @@
 		{
 			this.x = xcordinate;
 		}
+		this.setpostionY = function(ycordinate)
+		{
+			this.y = ycordinate;
+		}
 		
 		this.setIsActive= function(value)
 		{
@@ -35,7 +39,10 @@
 		{
 			return this.isActive;
 		}
-		
+		this.setState = function(state)
+		{
+			this.state = state;
+		}
 		this.getImage = function()
 		{
 			return this.image;
@@ -49,6 +56,7 @@
 			 this.isActive = false;
 			 this.image.onload = function(){
 			 this.isReady = true;
+			 
 	}
 	}
 	this.getImageSize = function()
@@ -64,14 +72,22 @@
 	
 	this.update = function()
 	{
+		if(this.state == "PickedUp")
+			return;
 		
-        if(this.x >= this.maxDisplacement && this.x < 40000 )
+		if(this.state == "dropped")
+		{
+			this.x += 50;
+			return;
+		}
+		
+        if(this.x >= this.maxDisplacement && this.x < 40000  )
 		{
 			this.x = this.maxDisplacement;
 			this.isActive = true;
-			
+			this.state = "atmax";
 		}
-		else
+		else 
 		{
 			 this.x += 5;	
 		}
