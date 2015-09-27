@@ -1,5 +1,6 @@
 
-	function Mail(typeOfMail,posX,posY,maxDisplacement,isready)
+	
+	function Mail(typeOfMail,posX,posY,maxDisplacement,isready,maxWidth)
 	{
 		this.type = typeOfMail;
 		this.x = posX;
@@ -7,7 +8,9 @@
 		this.maxDisplacement = maxDisplacement;
 		this.image ;
 		this.enemyAssets = ['art/Enemies/blue.png','art/Enemies/green.png','art/Enemies/red.png'];
-        this.isActive = isready;	
+        this.isActive = isready;
+		this.maxWidth = maxWidth;
+		
 		
 		
 		this.getType = function(){
@@ -43,6 +46,10 @@
 		{
 			this.state = state;
 		}
+		this.getState = function()
+		{
+			return this.state;
+		}
 		this.getImage = function()
 		{
 			return this.image;
@@ -56,6 +63,7 @@
 			 this.isActive = false;
 			 this.image.onload = function(){
 			 this.isReady = true;
+			 this.state = "Ready";
 			 
 	}
 	}
@@ -72,14 +80,27 @@
 	
 	this.update = function()
 	{
-		if(this.state == "PickedUp")
+		if(this.state == "PickedUp" )
 			return;
 		
-		if(this.state == "dropped")
+		if(this.state == "dead")
 		{
 			this.x += 50;
 			return;
 		}
+		
+		if(this.state == "dropped" && this.x <= (this.maxWidth + 100))
+		{
+			this.x += 50;
+			return;
+		}
+		else if(this.state == "dropped")
+		{
+			this.state = "dead";
+			
+			return;
+		}
+		
 		
         if(this.x >= this.maxDisplacement && this.x < 40000  )
 		{

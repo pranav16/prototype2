@@ -14,6 +14,19 @@ var laneThree = [];
 var laneFour = [];
 var laneEnemyCount = [];
 var pickedElement;
+var score = 0;
+var mailBoxes = [];
+var mailBoxType = [];
+var bg;
+var isBgReady;
+function collides(a, b) {
+	var isCollides = false;
+	var temp = b.getPostionY();
+	if(b.getPostionX() > (canvas.width - mailBoxes[a].width) && b.getPostionX() < canvas.width && b.getPostionY() == (a * laneSize))
+		isCollides = true;
+	
+  return isCollides;
+}
 
 var player = {
 	x : 100,
@@ -36,7 +49,7 @@ var player = {
 	},
 	
 	playIdle : function(){
-		context.clearRect(0, 0, canvas.width, canvas.height);
+		
      	context.drawImage(this.idleFrames[this.currentAnimationKey], this.x, this.y);
 		this.currentAnimationKey = (this.currentAnimationKey + 1) % this.idleFrames.length;
 	}
@@ -77,13 +90,27 @@ function init()
 			imageLoadCount++;
 		}
 	}
+	var enemyAssets = ['art/Enemies/blue.png','art/Enemies/green.png','art/Enemies/red.png','art/Enemies/green.png'];
 	
+	for (var p = 0; p < 4 ; p++)
+	{
+		mailBoxes[p] = new Image();
+		mailBoxes[p].src = enemyAssets[p];
+		if(p < 3)
+		mailBoxType[p] = p;
+		else
+			mailBoxType[p] = 1;
+	}
 	
 	for(var j = 0;j < 4 ; j++)
 	{
 		laneEnemyCount[j] = 0;
 	}
-	
+	bg = new Image();
+	bg.src = 'art/bg.jpg';
+	bg.onload = function() {
+		isBgReady = true;
+	}
 	setInterval(update,frameRate);
 }
 
@@ -107,7 +134,7 @@ $(document).bind("keydown.space", function() {
 	var index = laneEnemyCount[player.currentLane];
 	if(laneOne[index].getPostionX() >= (canvas.width * 0.5) && laneOne[index].getPostionX() < 40000 && player.currentLane == 0 )
 	{
-	laneOne[index].setpostionY(player.y - 100);
+	laneOne[index].setpostionY(0);
 	laneOne[index].setpostion(player.x);
 	laneOne[index].setState("PickedUp");
 	laneEnemyCount[player.currentLane]++;
@@ -116,31 +143,33 @@ $(document).bind("keydown.space", function() {
 	}
 	if(laneTwo[index].getPostionX() >= (canvas.width * 0.5) && laneTwo[index].getPostionX() < 40000 && player.currentLane == 1)
 	{
-	laneTwo[index].setpostionY(player.y - 100);
+	laneTwo[index].setpostionY(laneSize);
 	laneTwo[index].setpostion(player.x);
-	laneTwo[index].setpostion(postionX);
-	laneEnemyCount[player.currentLane]++;
+	
 	laneTwo[index].setState("PickedUp");
+	laneEnemyCount[player.currentLane]++;
 	pickedElement = laneTwo[index];
 	player.state = "Pickup"
 	}
 	if(laneThree [index].getPostionX() >= (canvas.width * 0.5) && laneThree[index].getPostionX() < 40000 && player.currentLane == 2)
 	{
-	laneThree[index].setpostionY(player.y - 100);
+	laneThree[index].setpostionY(laneSize* 2);
 	laneThree[index].setpostion(player.x);
-	laneThree[index].setpostion(postionX);
-	laneEnemyCount[player.currentLane]++;
+
 	laneThree[index].setState("PickedUp");
+	laneEnemyCount[player.currentLane]++;
+	
 	pickedElement = laneThree[index];
 	player.state = "Pickup"
 	}
 	if(laneFour[index].getPostionX() >= (canvas.width * 0.5) && laneFour[index].getPostionX() < 40000 && player.currentLane == 3)
 	{
-	laneFour[index].setpostionY(player.y - 100);
+	laneFour[index].setpostionY(laneSize * 3);
 	laneFour[index].setpostion(player.x);
-	laneFour[index].setpostion(postionX);
-	laneEnemyCount[player.currentLane]++;
+	
 	laneFour[index].setState("PickedUp");
+	laneEnemyCount[player.currentLane]++;
+
 	pickedElement = laneFour[index];
 	player.state = "Pickup"
 	}
@@ -173,14 +202,14 @@ var updateLanes = function (){
 for(var i = 0;i < 100;i++)
 {	
 	
-	
-		if(i > 0 && laneOne[i].getPostionX() <= (laneOne[i-1].getPostionX() - 80))
+	    var state =  laneOne[i].getState();
+		if(i > 0 && laneOne[i].getPostionX() <= (laneOne[i-1].getPostionX() - 80) )
 		 	laneOne[i].update();
 		else if(i == 0)
 			laneOne[i].update();
 
 
-		if(i > 0 && laneTwo[i].getPostionX() <= (laneTwo[i-1].getPostionX() - 80))
+		if(i > 0 && laneTwo[i].getPostionX() <= (laneTwo[i-1].getPostionX() - 80) )
 		 	laneTwo[i].update();
 		else if(i == 0)
 			laneTwo[i].update();
@@ -199,8 +228,38 @@ for(var i = 0;i < 100;i++)
 	
 	if(player.state == "Pickup")
 	{
-		pickedElement.setpostionY(player.y - 100);
+		
+		pickedElement.setpostionY(player.currentLane * laneSize);
 	}
+}
+
+var checkForEnemyCollision = function()
+{
+	if(pickedElement != null)
+	{
+		
+		for(var i = 0;i < 4 ;i++)
+		{
+			var typeOfMailBox = mailBoxType[i];
+			var typeOfPickedElement = pickedElement.getType();
+			if(collides(i,pickedElement) && typeOfMailBox == typeOfPickedElement )
+			{
+			score++;
+			document.getElementById("score").innerHTML = "Score:" + score;
+			pickedElement = null;
+			
+			}
+			else if(collides(i,pickedElement)){
+			score--;
+			document.getElementById("score").innerHTML = "Score:" + score;
+			pickedElement = null;
+			
+			}
+		}
+		
+		
+	}
+	
 }
 
 
@@ -213,8 +272,9 @@ var initLanes = function(){
 		 var maxDisplacement = canvas.width * 0.5;
 		 var state = false;
 		 var type = Math.floor((Math.random() * 3));
+		 var maxWidth = canvas.width;
 		 
-		laneOne[i] = new Mail(type,xPosition,positionY,maxDisplacement,state);
+		laneOne[i] = new Mail(type,xPosition,positionY,maxDisplacement,state,maxWidth);
 		laneOne[i].init();
 	   }
 	   positionY += laneSize;
@@ -225,9 +285,9 @@ var initLanes = function(){
 		 var maxDisplacement = canvas.width * 0.5;
 		 var state = false;
 		 var type = Math.floor((Math.random() * 3));
+		  var maxWidth = canvas.width;
 		 
-		 
-		laneTwo[i] = new Mail(type,xPosition,positionY ,maxDisplacement,state);
+		laneTwo[i] = new Mail(type,xPosition,positionY ,maxDisplacement,state,maxWidth);
 		laneTwo[i].init();
 	   }
 	   positionY += laneSize;
@@ -238,8 +298,9 @@ var initLanes = function(){
 		 var maxDisplacement = canvas.width * 0.5;
 		 var state = false;
 		 var type = Math.floor((Math.random() * 3));
+		  var maxWidth = canvas.width;
 		
-		laneThree[i] = new Mail(type,xPosition,positionY,maxDisplacement,state);
+		laneThree[i] = new Mail(type,xPosition,positionY,maxDisplacement,state,maxWidth);
 		laneThree[i].init();
 	   }
 	   positionY += laneSize;
@@ -250,8 +311,9 @@ var initLanes = function(){
 		 var maxDisplacement = canvas.width * 0.5;
 		 var state = false;
 		 var type = Math.floor((Math.random() * 3));
+		  var maxWidth = canvas.width;
 		
-		laneFour[i] = new Mail(type,xPosition,positionY,maxDisplacement,state);
+		laneFour[i] = new Mail(type,xPosition,positionY,maxDisplacement,state,maxWidth);
 		laneFour[i].init();
 	   }
 	   
@@ -266,8 +328,8 @@ var update = function()
 		 player.x = canvas.width * 0.7;
 		 player.y = 2 * player.idleFrames[0].width;
 		 laneSize = (canvas.height - 2* player.idleFrames[0].width)/numberOflanes;
-		 console.log(laneSize);
-		initLanes();
+		 initLanes();
+		
 		 
 		 gameState = "playing";
 	 }
@@ -277,9 +339,8 @@ var update = function()
 	{
 		return;
 	}
-	
+	checkForEnemyCollision();
 	updateLanes();
-    console.log(player.currentLane);
 	draw();
 	
 		
@@ -290,7 +351,16 @@ var update = function()
 
 var draw = function()
 {
+	    
+	    context.clearRect(0, 0, canvas.width, canvas.height);
+		context.drawImage(bg,0,0 ,canvas.width,canvas.height);
 		player.draw();
+		for(var i = 0 ; i< 4 ; i++)
+		{
+			context.drawImage(mailBoxes[i],canvas.width - mailBoxes[i].width,laneSize * i);
+			console.log(mailBoxes[i].x);
+		}
+		
 		for(var i = 0;i < 100;i++)
 		{
 			
@@ -311,5 +381,7 @@ var draw = function()
 			
 		 	laneFour[i].draw(context);
 		}
+	
+			
 		
 }
