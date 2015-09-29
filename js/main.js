@@ -19,6 +19,15 @@ var mailBoxes = [];
 var mailBoxType = [];
 var bg;
 var isBgReady;
+
+var priorityTask = {
+	
+	priority : 0,
+	count : 0,
+	maxValue : 2,
+	
+}
+
 function collides(a, b) {
 	var isCollides = false;
 	var temp = b.getPostionY();
@@ -90,13 +99,13 @@ function init()
 			imageLoadCount++;
 		}
 	}
-	var enemyAssets = ['art/Enemies/blue.png','art/Enemies/green.png','art/Enemies/red.png','art/Enemies/green.png'];
+	var enemyAssets = ['art/trucks/bluetruck.png','art/trucks/greentruck.png','art/trucks/redtruck.png','art/trucks/pinktruck.png'];
 	
 	for (var p = 0; p < 4 ; p++)
 	{
 		mailBoxes[p] = new Image();
 		mailBoxes[p].src = enemyAssets[p];
-		if(p < 3)
+		if(p < 4)
 		mailBoxType[p] = p;
 		else
 			mailBoxType[p] = 1;
@@ -107,7 +116,7 @@ function init()
 		laneEnemyCount[j] = 0;
 	}
 	bg = new Image();
-	bg.src = 'art/bg.jpg';
+	bg.src = 'art/bg.png';
 	bg.onload = function() {
 		isBgReady = true;
 	}
@@ -246,6 +255,20 @@ var checkForEnemyCollision = function()
 			{
 			score++;
 			document.getElementById("score").innerHTML = "Score:" + score;
+			if(typeOfMailBox == priorityTask.priority)
+			{
+				
+				priorityTask.count++;
+			}
+			
+			if(priorityTask.count >= priorityTask.maxValue)
+			{
+				
+				score += 10;
+				priorityTask.count = 0;
+				document.getElementById("score").innerHTML = "Score:" + score;
+			}
+			
 			pickedElement = null;
 			
 			}
@@ -255,6 +278,9 @@ var checkForEnemyCollision = function()
 			pickedElement = null;
 			
 			}
+			
+			
+			
 		}
 		
 		
@@ -271,7 +297,7 @@ var initLanes = function(){
 		 console.log(xPosition);
 		 var maxDisplacement = canvas.width * 0.5;
 		 var state = false;
-		 var type = Math.floor((Math.random() * 3));
+		 var type = Math.floor((Math.random() * 4));
 		 var maxWidth = canvas.width;
 		 
 		laneOne[i] = new Mail(type,xPosition,positionY,maxDisplacement,state,maxWidth);
@@ -284,7 +310,7 @@ var initLanes = function(){
 		 console.log(xPosition);
 		 var maxDisplacement = canvas.width * 0.5;
 		 var state = false;
-		 var type = Math.floor((Math.random() * 3));
+		 var type = Math.floor((Math.random() * 4));
 		  var maxWidth = canvas.width;
 		 
 		laneTwo[i] = new Mail(type,xPosition,positionY ,maxDisplacement,state,maxWidth);
@@ -297,7 +323,7 @@ var initLanes = function(){
 		 console.log(xPosition);
 		 var maxDisplacement = canvas.width * 0.5;
 		 var state = false;
-		 var type = Math.floor((Math.random() * 3));
+		 var type = Math.floor((Math.random() * 4));
 		  var maxWidth = canvas.width;
 		
 		laneThree[i] = new Mail(type,xPosition,positionY,maxDisplacement,state,maxWidth);
@@ -310,7 +336,7 @@ var initLanes = function(){
 		 console.log(xPosition);
 		 var maxDisplacement = canvas.width * 0.5;
 		 var state = false;
-		 var type = Math.floor((Math.random() * 3));
+		 var type = Math.floor((Math.random() * 4));
 		  var maxWidth = canvas.width;
 		
 		laneFour[i] = new Mail(type,xPosition,positionY,maxDisplacement,state,maxWidth);

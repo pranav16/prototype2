@@ -7,7 +7,7 @@
 		this.y = posY;
 		this.maxDisplacement = maxDisplacement;
 		this.image ;
-		this.enemyAssets = ['art/Enemies/blue.png','art/Enemies/green.png','art/Enemies/red.png'];
+		this.enemyAssets = ['art/Enemies/blue.png','art/Enemies/green.png','art/Enemies/red.png','art/Enemies/pink.png'];
         this.isActive = isready;
 		this.maxWidth = maxWidth;
 		
