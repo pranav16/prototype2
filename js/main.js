@@ -19,6 +19,7 @@ var mailBoxes = [];
 var mailBoxType = [];
 var bg;
 var isBgReady;
+var time;
 function collides(a, b) {
 	var isCollides = false;
 	var temp = b.getPostionY();
@@ -318,18 +319,31 @@ var initLanes = function(){
 	   }
 	   
 } 
-
+var checkForTime = function()
+{
+	var date = new Date();
+	var currentTime = (date.getTime()/1000) /60;
+	var timeDiff = currentTime - time;
+	if(timeDiff >= 2)
+		return true;
+	else
+		return false;
+	
+}
 
 var update = function()
 {
 	 
+	 if(gameState == "gameover")
+		 return;
 	 if(gameState == "init" && maxImageSize == imageLoadCount )
 	 {
 		 player.x = canvas.width * 0.7;
 		 player.y = 2 * player.idleFrames[0].width;
 		 laneSize = (canvas.height - 2* player.idleFrames[0].width)/numberOflanes;
 		 initLanes();
-		
+		 var date = new Date();
+		 time = (date.getTime()/1000)/60;
 		 
 		 gameState = "playing";
 	 }
@@ -339,10 +353,13 @@ var update = function()
 	{
 		return;
 	}
+
+	
 	checkForEnemyCollision();
 	updateLanes();
 	draw();
-	
+	if(checkForTime())
+		gameState = "gameover";
 		
 }
 
