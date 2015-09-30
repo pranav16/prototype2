@@ -348,11 +348,18 @@ var initLanes = function(){
 	   }
 	   
 } 
-var checkForTime = function()
+
+var getTimeDiffrence = function ()
 {
 	var date = new Date();
 	var currentTime = (date.getTime()/1000) /60;
 	var timeDiff = currentTime - time;
+	return timeDiff;
+}
+
+var checkForTime = function()
+{
+	var timeDiff = timeDiff;
 	if(timeDiff >= 2)
 		return true;
 	else
