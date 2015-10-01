@@ -293,7 +293,7 @@ var checkForEnemyCollision = function()
 			if(collides(i,pickedElement) && typeOfMailBox == typeOfPickedElement )
 			{
 			score++;
-			document.getElementById("score").innerHTML = "Score:" + score;
+			
 			if(typeOfMailBox == priorityTask.priority)
 			{
 				
@@ -313,7 +313,7 @@ var checkForEnemyCollision = function()
 			}
 			else if(collides(i,pickedElement)){
 			score--;
-			document.getElementById("score").innerHTML = "Score:" + score;
+			
 			pickedElement = null;
 			
 			}
