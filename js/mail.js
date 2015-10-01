@@ -101,7 +101,16 @@ function Mail(typeOfMail,posX,posY,maxDisplacement,isready,maxWidth)
 		else if(this.state == "dropped")
 		{
 			this.state = "dead";
+			return;
+		}
+		
+		if ( this.state == "powerDropped" && this.x <= (this.maxWidth+100) )
+		{
 			
+		}
+		else if ( this.state == "powerDropped" )
+		{
+			this.state = "dead";
 			return;
 		}
 		

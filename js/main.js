@@ -89,7 +89,6 @@ function init()
 	canvas.height = 800;
 
     context = canvas.getContext("2d");
-	
 	body.appendChild(canvas);
 	
    	var assests = ['art/marioWalk/1.png',
@@ -103,14 +102,17 @@ function init()
     
 					
 	maxImageSize = assests.length;
+	
 	for ( var i = 0; i < assests.length; i++ )
 	{
 		player.idleFrames.push(new Image());
 		player.idleFrames[i].src = assests[i];
-		player.idleFrames[i].onload = function () {
+		player.idleFrames[i].onload = function ()
+		{
 			imageLoadCount++;
 		}
 	}
+	
 	var enemyAssets = ['art/trucks/bluetruck.png','art/trucks/greentruck.png','art/trucks/redtruck.png','art/trucks/pinktruck.png'];
 	var wrongFeeback = ['art/trucks/noblue.png','art/trucks/nogreen.png','art/trucks/nored.png','art/trucks/nopink.png'];
 	var correctFeedback =['art/trucks/yesblue.png','art/trucks/yesgreen.png','art/trucks/yesred.png','art/trucks/yespink.png'];
@@ -219,6 +221,7 @@ $(document).bind("keydown.space", function()
 	else if(player.state = "Pickup")
 	{
 		pickedElement.setState("dropped");
+		//pickedElement.setState("powerDropped");
 		player.state = "walking";
 	}
 });
@@ -279,7 +282,7 @@ var updateLanes = function ()
 			laneFour[i].update();
 	}	
 	
-	if(player.state == "Pickup")
+	if(player.state == "Pickup" && pickedElement != null)
 	{
 		pickedElement.setpostionY(player.currentLane * laneSize);
 	}
@@ -418,7 +421,6 @@ var update = function()
 		 initLanes();
 		 var date = new Date();
 		 StartTime = (date.getTime()/1000)/60;
-		 
 		 gameState = "playing";
 	 }
 	
@@ -444,8 +446,7 @@ var update = function()
 }
 
 var draw = function()
-{
-	    
+{ 
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	context.drawImage(bg,0,0 ,canvas.width,canvas.height);
 	player.draw();
@@ -470,7 +471,7 @@ var draw = function()
 	for(var i = 0 ; i< 4 ; i++)
 	{
 	    if(highlightCell[i] == 0 )	
-		context.drawImage(mailBoxes[i],canvas.width - mailBoxes[i].width,laneSize * i);
+			context.drawImage(mailBoxes[i],canvas.width - mailBoxes[i].width,laneSize * i);
 		else if(highlightCell[i] == 1)
 			context.drawImage(correctFeedbackImages[i],canvas.width - mailBoxes[i].width,laneSize * i);
 		else
