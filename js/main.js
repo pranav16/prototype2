@@ -17,6 +17,8 @@ var pickedElement;
 var score = 0;
 var mailBoxes = [];
 var mailBoxType = [];
+var correctFeedbackImages = [];
+var wrongFeedBackImages = [];
 var converyorImages = [];
 var bg;
 var isBgReady;
@@ -24,10 +26,11 @@ var EnemyCount = [];
 var StartTime;
 var gameDuration = 2;
 var numberOfEnemiesToSpawn = 1;
-var numberOfWaves = 7;
+var numberOfWaves = 15;
 var waveCounter = 1;
-var spawnDelay = 20;
+var spawnDelay = 15;
 var spawnTimer = 0;
+var highlightCell = [];
 
 
 var priorityTask = {
@@ -84,8 +87,8 @@ function init()
 	canvas = document.getElementById("myCanvas");
 	var body = document.getElementById("body");
 	
-	canvas.width = window.innerWidth-100;
-	canvas.height = window.innerHeight-100;
+	canvas.width = 1000;
+	canvas.height = 800;
 
     context = canvas.getContext("2d");
 	
@@ -111,16 +114,25 @@ function init()
 		}
 	}
 	var enemyAssets = ['art/trucks/bluetruck.png','art/trucks/greentruck.png','art/trucks/redtruck.png','art/trucks/pinktruck.png'];
-	
+	var wrongFeeback = ['art/trucks/noblue.png','art/trucks/nogreen.png','art/trucks/nored.png','art/trucks/nopink.png'];
+	var correctFeedback =['art/trucks/yesblue.png','art/trucks/yesgreen.png','art/trucks/yesred.png','art/trucks/yespink.png'];
 	for (var p = 0; p < 4 ; p++)
 	{
 		mailBoxes[p] = new Image();
 		mailBoxes[p].src = enemyAssets[p];
+		correctFeedbackImages[p] = new Image();
+		correctFeedbackImages[p].src = correctFeedback[p];
+		wrongFeedBackImages[p] = new Image();
+		wrongFeedBackImages[p].src = wrongFeeback[p];
+		
 		if(p < 4)
 		mailBoxType[p] = p;
 		else
 			mailBoxType[p] = 1;
 	}
+	
+	
+	
 	
 	for(var j = 0;j < 4 ; j++)
 	{
@@ -135,6 +147,10 @@ function init()
 	{
 		EnemyCount[i] = 0;
 	}
+	
+	for (var i = 0; i <  4 ; i++)
+		highlightCell[i] = 0;
+	
 	
 	setInterval(update,frameRate);
 }
@@ -203,7 +219,6 @@ $(document).bind("keydown.space", function() {
 	else if(player.state = "Pickup")
 	{
 		pickedElement.setState("dropped");
-		//player.state = "waitingForBlock"
 		player.state = "walking";
 		
 	}
@@ -293,6 +308,7 @@ var checkForEnemyCollision = function()
 			if(collides(i,pickedElement) && typeOfMailBox == typeOfPickedElement )
 			{
 			score++;
+			highlightCell[i] = 1;
 			
 			if(typeOfMailBox == priorityTask.priority)
 			{
@@ -313,6 +329,7 @@ var checkForEnemyCollision = function()
 			}
 			else if(collides(i,pickedElement)){
 			score--;
+			highlightCell[i] = -1;
 			
 			pickedElement = null;
 			
@@ -388,6 +405,8 @@ var initLanes = function(){
 		   converyorImages[i].src = "art/Conveyor.png";
 	   }
 	   
+
+	   
 } 
 
 var getTimeDiffrence = function ()
@@ -415,7 +434,7 @@ var update = function()
 		 return;
 	 if(gameState == "init" && maxImageSize == imageLoadCount )
 	 {
-		 player.x = canvas.width * 0.7;
+		 player.x = canvas.width * 0.60;
 		 player.y = 2 * player.idleFrames[0].width;
 		 laneSize = (canvas.height - 2* player.idleFrames[0].width)/numberOflanes;
 		 initLanes();
@@ -481,14 +500,20 @@ var draw = function()
 		}
 		for(var i = 0 ; i< 4 ; i++)
 		{
+		    if(highlightCell[i] == 0 )	
 			context.drawImage(mailBoxes[i],canvas.width - mailBoxes[i].width,laneSize * i);
-			
-		}
+		else if(highlightCell[i] == 1)
+			context.drawImage(correctFeedbackImages[i],canvas.width - mailBoxes[i].width,laneSize * i);
+		else
+			context.drawImage(wrongFeedBackImages[i],canvas.width - mailBoxes[i].width,laneSize * i);
+	
+        highlightCell[i] = 0;
+	}
 		
 		for(var i = 0 ; i< 4 ; i++)
 		{
 			
-			var y = (laneSize * (i+1)) - converyorImages[i].height/2;
+			var y = (laneSize * (i+1)) - (converyorImages[i].height * 0.50);
 			context.drawImage(converyorImages[i],0, y,canvas.width *  0.55,converyorImages[i].height);
 			
 			

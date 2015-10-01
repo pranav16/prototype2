@@ -91,7 +91,7 @@
 		
 		if(this.state == "dropped" && this.x <= (this.maxWidth + 100))
 		{
-			this.x += 50;
+			this.x += 180;
 			return;
 		}
 		else if(this.state == "dropped")
@@ -110,7 +110,7 @@
 		}
 		else 
 		{
-			 this.x += 25;	
+			 this.x += 50;	
 		}
      	
 		
