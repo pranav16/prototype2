@@ -136,9 +136,12 @@ function init()
 	
 	bg = new Image();
 	bg.src = 'art/bg.png';
-	bg.onload = function() {
+	
+	bg.onload = function()
+	{
 		isBgReady = true;
 	}
+	
 	for (var i = 0 ; i < 4;i++)
 	{
 		EnemyCount[i] = 0;
@@ -176,45 +179,42 @@ $(document).bind("keydown.space", function()
 			laneOne[index].setpostionY(0);
 			laneOne[index].setpostionX(player.x);
 			laneOne[index].setState("PickedUp");
+			
 			laneEnemyCount[player.currentLane]++;
 			pickedElement = laneOne[index];
-			player.state = "Pickup";
 		}
 	
 		else if(laneTwo[index].getPostionX() >= (canvas.width * 0.5) && laneTwo[index].getPostionX() < 40000 && player.currentLane == 1)
 		{
 			laneTwo[index].setpostionY(laneSize);
 			laneTwo[index].setpostionX(player.x);
-			
 			laneTwo[index].setState("PickedUp");
+			
 			laneEnemyCount[player.currentLane]++;
 			pickedElement = laneTwo[index];
-			player.state = "Pickup";
 		}
 	
 		else if(laneThree [index].getPostionX() >= (canvas.width * 0.5) && laneThree[index].getPostionX() < 40000 && player.currentLane == 2)
 		{
 			laneThree[index].setpostionY(laneSize* 2);
 			laneThree[index].setpostionX(player.x);
-
 			laneThree[index].setState("PickedUp");
-			laneEnemyCount[player.currentLane]++;
 			
+			laneEnemyCount[player.currentLane]++;
 			pickedElement = laneThree[index];
-			player.state = "Pickup";
 		}
 		
 		else if(laneFour[index].getPostionX() >= (canvas.width * 0.5) && laneFour[index].getPostionX() < 40000 && player.currentLane == 3)
 		{
 			laneFour[index].setpostionY(laneSize * 3);
 			laneFour[index].setpostionX(player.x);
-			
 			laneFour[index].setState("PickedUp");
+			
 			laneEnemyCount[player.currentLane]++;
-
 			pickedElement = laneFour[index];
-			player.state = "Pickup"
 		}
+		
+		player.state = "Pickup";
 	}
 	else if(player.state = "Pickup")
 	{
