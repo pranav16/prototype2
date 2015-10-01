@@ -19,6 +19,7 @@ var mailBoxes = [];
 var mailBoxType = [];
 var correctFeedbackImages = [];
 var wrongFeedBackImages = [];
+var highlightCell = [];
 var converyorImages = [];
 var bg;
 var isBgReady;
@@ -30,7 +31,8 @@ var numberOfWaves = 15;
 var waveCounter = 1;
 var spawnDelay = 15;
 var spawnTimer = 0;
-var highlightCell = [];
+var priorityHighlightBoxs = [];
+
 
 
 var priorityTask = {
@@ -116,6 +118,7 @@ function init()
 	var enemyAssets = ['art/trucks/bluetruck.png','art/trucks/greentruck.png','art/trucks/redtruck.png','art/trucks/pinktruck.png'];
 	var wrongFeeback = ['art/trucks/noblue.png','art/trucks/nogreen.png','art/trucks/nored.png','art/trucks/nopink.png'];
 	var correctFeedback =['art/trucks/yesblue.png','art/trucks/yesgreen.png','art/trucks/yesred.png','art/trucks/yespink.png'];
+	var hightlightPath =['art/trucks/bluehighlight.png','art/trucks/greenhighlight.png','art/trucks/redhighlight.png','art/trucks/pinkhighlight.png'];
 	for (var p = 0; p < 4 ; p++)
 	{
 		mailBoxes[p] = new Image();
@@ -124,6 +127,8 @@ function init()
 		correctFeedbackImages[p].src = correctFeedback[p];
 		wrongFeedBackImages[p] = new Image();
 		wrongFeedBackImages[p].src = wrongFeeback[p];
+		priorityHighlightBoxs[p] = new Image();
+		priorityHighlightBoxs[p].src = hightlightPath[p];
 		mailBoxType[p] = p;
 		
 	}
@@ -308,8 +313,7 @@ var checkForEnemyCollision = function()
 			highlightCell[i] = 1;
 			
 			if(typeOfMailBox == priorityTask.priority)
-			{
-				
+			{	
 				priorityTask.count++;
 			}
 			
@@ -318,6 +322,7 @@ var checkForEnemyCollision = function()
 				
 				score += 10;
 				priorityTask.count = 0;
+				priorityTask.priority = Math.floor((Math.random() * 4))
 				
 			}
 			
@@ -505,16 +510,20 @@ var draw = function()
 			context.drawImage(wrongFeedBackImages[i],canvas.width - mailBoxes[i].width,laneSize * i);
 	
         highlightCell[i] = 0;
-	}
 		
+		
+	}
+		context.drawImage(priorityHighlightBoxs[priorityTask.priority],canvas.width - priorityHighlightBoxs[priorityTask.priority].width + 22,laneSize * priorityTask.priority - 18);
 		for(var i = 0 ; i< 4 ; i++)
 		{
 			
 			var y = (laneSize * (i+1)) - (converyorImages[i].height * 0.50);
 			context.drawImage(converyorImages[i],0, y,canvas.width *  0.55,converyorImages[i].height);
 			
-			
 		}
+		
+	
+		
 	   context.font = "30px Verdana"
 	   context.fillText(" Score:" + score,50,50);
 	   var timeDiff = getTimeDiffrence();
