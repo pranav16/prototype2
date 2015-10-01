@@ -174,16 +174,16 @@ $(document).bind("keydown.space", function()
 { 
     if(player.state == "walking")
 	{
-		var postionX = 40000;
 		var index = laneEnemyCount[player.currentLane];
 		if(laneOne[index].getPostionX() >= (canvas.width * 0.5) && laneOne[index].getPostionX() < 40000 && player.currentLane == 0 )
 		{
-			laneOne[index].setpostionY(0);
+			laneOne[index].setpostionY(player.y);
 			laneOne[index].setpostionX(player.x);
 			laneOne[index].setState("PickedUp");
 			
 			laneEnemyCount[player.currentLane]++;
 			pickedElement = laneOne[index];
+			player.state = "Pickup";
 		}
 	
 		else if(laneTwo[index].getPostionX() >= (canvas.width * 0.5) && laneTwo[index].getPostionX() < 40000 && player.currentLane == 1)
@@ -194,6 +194,7 @@ $(document).bind("keydown.space", function()
 			
 			laneEnemyCount[player.currentLane]++;
 			pickedElement = laneTwo[index];
+			player.state = "Pickup";
 		}
 	
 		else if(laneThree [index].getPostionX() >= (canvas.width * 0.5) && laneThree[index].getPostionX() < 40000 && player.currentLane == 2)
@@ -204,6 +205,7 @@ $(document).bind("keydown.space", function()
 			
 			laneEnemyCount[player.currentLane]++;
 			pickedElement = laneThree[index];
+			player.state = "Pickup";
 		}
 		
 		else if(laneFour[index].getPostionX() >= (canvas.width * 0.5) && laneFour[index].getPostionX() < 40000 && player.currentLane == 3)
@@ -214,9 +216,8 @@ $(document).bind("keydown.space", function()
 			
 			laneEnemyCount[player.currentLane]++;
 			pickedElement = laneFour[index];
+			player.state = "Pickup";
 		}
-		
-		player.state = "Pickup";
 	}
 	else if(player.state = "Pickup")
 	{
