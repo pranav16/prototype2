@@ -39,7 +39,7 @@ var priorityTask = {
 	
 	priority : 0,
 	count : 0,
-	maxValue : 2,
+	maxValue : Math.floor((Math.random() * 3)+3),
 	
 }
 
@@ -322,8 +322,8 @@ var checkForEnemyCollision = function()
 				
 				score += 10;
 				priorityTask.count = 0;
-				priorityTask.priority = Math.floor((Math.random() * 4))
-				
+				priorityTask.priority = Math.floor((Math.random() * 4));
+				priorityTask.maxValue = Math.floor((Math.random() * 3)+3)
 			}
 			
 			pickedElement = null;
@@ -531,6 +531,9 @@ var draw = function()
 	   if(timeLeft < 0)
 			timeDiff = 0;
 	   context.fillText("Time:" + timeLeft.toFixed(2),canvas.width/2,50);
+	   
+	   context.font = "15px Verdana"
+	   context.fillText(priorityTask.maxValue-priorityTask.count + " left", canvas.width-120, priorityTask.priority*laneSize + 125);
 	
 			
 		
