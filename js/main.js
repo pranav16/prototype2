@@ -33,8 +33,6 @@ var spawnDelay = 15;
 var spawnTimer = 0;
 var priorityHighlightBoxs = [];
 
-
-
 var priorityTask =
 {
 	priority : 0,
@@ -183,7 +181,7 @@ $(document).bind("keydown.space", function()
 			player.state = "Pickup";
 		}
 	
-		if(laneTwo[index].getPostionX() >= (canvas.width * 0.5) && laneTwo[index].getPostionX() < 40000 && player.currentLane == 1)
+		else if(laneTwo[index].getPostionX() >= (canvas.width * 0.5) && laneTwo[index].getPostionX() < 40000 && player.currentLane == 1)
 		{
 			laneTwo[index].setpostionY(laneSize);
 			laneTwo[index].setpostion(player.x);
@@ -194,7 +192,7 @@ $(document).bind("keydown.space", function()
 			player.state = "Pickup";
 		}
 	
-		if(laneThree [index].getPostionX() >= (canvas.width * 0.5) && laneThree[index].getPostionX() < 40000 && player.currentLane == 2)
+		else if(laneThree [index].getPostionX() >= (canvas.width * 0.5) && laneThree[index].getPostionX() < 40000 && player.currentLane == 2)
 		{
 			laneThree[index].setpostionY(laneSize* 2);
 			laneThree[index].setpostion(player.x);
@@ -206,7 +204,7 @@ $(document).bind("keydown.space", function()
 			player.state = "Pickup";
 		}
 		
-		if(laneFour[index].getPostionX() >= (canvas.width * 0.5) && laneFour[index].getPostionX() < 40000 && player.currentLane == 3)
+		else if(laneFour[index].getPostionX() >= (canvas.width * 0.5) && laneFour[index].getPostionX() < 40000 && player.currentLane == 3)
 		{
 			laneFour[index].setpostionY(laneSize * 3);
 			laneFour[index].setpostion(player.x);
