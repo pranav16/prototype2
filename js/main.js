@@ -17,10 +17,17 @@ var pickedElement;
 var score = 0;
 var mailBoxes = [];
 var mailBoxType = [];
+var converyorImages = [];
 var bg;
 var isBgReady;
-
-var time;
+var EnemyCount = [];
+var StartTime;
+var gameDuration = 2;
+var numberOfEnemiesToSpawn = 1;
+var numberOfWaves = 7;
+var waveCounter = 1;
+var spawnDelay = 20;
+var spawnTimer = 0;
 
 
 var priorityTask = {
@@ -124,6 +131,11 @@ function init()
 	bg.onload = function() {
 		isBgReady = true;
 	}
+	for (var i = 0 ; i < 4;i++)
+	{
+		EnemyCount[i] = 0;
+	}
+	
 	setInterval(update,frameRate);
 }
 
@@ -210,29 +222,52 @@ else
 
 
 });
+
+
+var spawnEnemies = function()
+{
+	waveCounter++;
+	if(waveCounter % numberOfWaves == 0 && numberOfEnemiesToSpawn < 6)
+	{
+		numberOfEnemiesToSpawn++;
+	}
+	
+	for(var i  = 0; i < numberOfEnemiesToSpawn ; i++)
+	{
+		var index =  Math.floor((Math.random() * 4));
+		EnemyCount[index]++;
+	}
+	
+	
+	
+}
+
+
+
+
 var updateLanes = function (){
 
 for(var i = 0;i < 100;i++)
 {	
 	
 	    var state =  laneOne[i].getState();
-		if(i > 0 && laneOne[i].getPostionX() <= (laneOne[i-1].getPostionX() - 80) )
+		if(i > 0 && laneOne[i].getPostionX() <= (laneOne[i-1].getPostionX() - 80) && EnemyCount[0] >= i )
 		 	laneOne[i].update();
 		else if(i == 0)
 			laneOne[i].update();
 
 
-		if(i > 0 && laneTwo[i].getPostionX() <= (laneTwo[i-1].getPostionX() - 80) )
+		if(i > 0 && laneTwo[i].getPostionX() <= (laneTwo[i-1].getPostionX() - 80) && EnemyCount[1] >= i )
 		 	laneTwo[i].update();
 		else if(i == 0)
 			laneTwo[i].update();
 	
-			if(i > 0 && laneThree[i].getPostionX() <= (laneThree[i-1].getPostionX() - 80))
+			if(i > 0 && laneThree[i].getPostionX() <= (laneThree[i-1].getPostionX() - 80)&& EnemyCount[2] >= i)
 		 	laneThree[i].update();
 		else if(i == 0)
 			laneThree[i].update();
 	
-		if(i > 0 && laneFour[i].getPostionX() <= (laneFour[i-1].getPostionX() - 80))
+		if(i > 0 && laneFour[i].getPostionX() <= (laneFour[i-1].getPostionX() - 80) && EnemyCount[3] >= i)
 		 	laneFour[i].update();
 		else if(i == 0)
 			laneFour[i].update();
@@ -347,20 +382,26 @@ var initLanes = function(){
 		laneFour[i].init();
 	   }
 	   
+	   for(var i = 0; i < 4;i++)
+	   {
+		   converyorImages[i] = new Image();
+		   converyorImages[i].src = "art/Conveyor.png";
+	   }
+	   
 } 
 
 var getTimeDiffrence = function ()
 {
 	var date = new Date();
 	var currentTime = (date.getTime()/1000) /60;
-	var timeDiff = currentTime - time;
+	var timeDiff = currentTime - StartTime;
 	return timeDiff;
 }
 
 var checkForTime = function()
 {
-	var timeDiff = timeDiff;
-	if(timeDiff >= 2)
+	var timeDiff = getTimeDiffrence();
+	if(timeDiff >= gameDuration)
 		return true;
 	else
 		return false;
@@ -379,7 +420,7 @@ var update = function()
 		 laneSize = (canvas.height - 2* player.idleFrames[0].width)/numberOflanes;
 		 initLanes();
 		 var date = new Date();
-		 time = (date.getTime()/1000)/60;
+		 StartTime = (date.getTime()/1000)/60;
 		 
 		 gameState = "playing";
 	 }
@@ -389,9 +430,16 @@ var update = function()
 	{
 		return;
 	}
-
+	
+	spawnTimer++;
 	
 	checkForEnemyCollision();
+    if(spawnTimer >= spawnDelay )	
+	{
+		spawnEnemies();
+		spawnTimer = 0;
+	}
+
 	updateLanes();
 	draw();
 	if(checkForTime())
@@ -408,11 +456,8 @@ var draw = function()
 	    context.clearRect(0, 0, canvas.width, canvas.height);
 		context.drawImage(bg,0,0 ,canvas.width,canvas.height);
 		player.draw();
-		for(var i = 0 ; i< 4 ; i++)
-		{
-			context.drawImage(mailBoxes[i],canvas.width - mailBoxes[i].width,laneSize * i);
-			console.log(mailBoxes[i].x);
-		}
+		
+		
 		
 		for(var i = 0;i < 100;i++)
 		{
@@ -434,6 +479,27 @@ var draw = function()
 			
 		 	laneFour[i].draw(context);
 		}
+		for(var i = 0 ; i< 4 ; i++)
+		{
+			context.drawImage(mailBoxes[i],canvas.width - mailBoxes[i].width,laneSize * i);
+			
+		}
+		
+		for(var i = 0 ; i< 4 ; i++)
+		{
+			
+			var y = (laneSize * (i+1)) - converyorImages[i].height/2;
+			context.drawImage(converyorImages[i],0, y,canvas.width *  0.55,converyorImages[i].height);
+			
+			
+		}
+	   context.font = "30px Verdana"
+	   context.fillText(" Score:" + score,50,50);
+	   var timeDiff = getTimeDiffrence();
+	   var timeLeft = gameDuration - timeDiff;
+	   if(timeLeft < 0)
+			timeDiff = 0;
+	   context.fillText("Time:" + timeLeft.toFixed(2),canvas.width/2,50);
 	
 			
 		
