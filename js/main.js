@@ -124,11 +124,8 @@ function init()
 		correctFeedbackImages[p].src = correctFeedback[p];
 		wrongFeedBackImages[p] = new Image();
 		wrongFeedBackImages[p].src = wrongFeeback[p];
-		
-		if(p < 4)
 		mailBoxType[p] = p;
-		else
-			mailBoxType[p] = 1;
+		
 	}
 	
 	
