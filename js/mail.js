@@ -1,72 +1,77 @@
-
-	
-	function Mail(typeOfMail,posX,posY,maxDisplacement,isready,maxWidth)
+function Mail(typeOfMail,posX,posY,maxDisplacement,isready,maxWidth)
+{
+	this.type = typeOfMail;
+	this.x = posX;
+	this.y = posY;
+	this.maxDisplacement = maxDisplacement;
+	this.image ;
+	this.enemyAssets = ['art/Enemies/blue.png','art/Enemies/green.png','art/Enemies/red.png','art/Enemies/pink.png'];
+    this.isActive = isready;
+	this.maxWidth = maxWidth;
+		
+	this.getType = function()
 	{
-		this.type = typeOfMail;
-		this.x = posX;
-		this.y = posY;
-		this.maxDisplacement = maxDisplacement;
-		this.image ;
-		this.enemyAssets = ['art/Enemies/blue.png','art/Enemies/green.png','art/Enemies/red.png','art/Enemies/pink.png'];
-        this.isActive = isready;
-		this.maxWidth = maxWidth;
-		
-		
-		
-		this.getType = function(){
-			return this.type;
-		} 
-		this.getPostionX = function()
-		{
-			return this.x;
-		}
-		this.getPostionY = function()
-		{
-			return this.y;
-		}
+		return this.type;
+	} 
+	
+	this.getPostionX = function()
+	{
+		return this.x;
+	}
+	
+	this.getPostionY = function()
+	{
+		return this.y;
+	}
 	    
-		this.setpostion = function(xcordinate)
-		{
-			this.x = xcordinate;
-		}
-		this.setpostionY = function(ycordinate)
-		{
-			this.y = ycordinate;
-		}
+	this.setpostion = function(xcordinate)
+	{
+		this.x = xcordinate;
+	}
+	
+	this.setpostionY = function(ycordinate)
+	{
+		this.y = ycordinate;
+	}
 		
-		this.setIsActive= function(value)
-		{
-			this.isActive = value;
-		}
-		this.getisActive = function()
-		{
-			return this.isActive;
-		}
-		this.setState = function(state)
-		{
-			this.state = state;
-		}
-		this.getState = function()
-		{
-			return this.state;
-		}
-		this.getImage = function()
-		{
-			return this.image;
-		}
+	this.setIsActive= function(value)
+	{
+		this.isActive = value;
+	}
+	
+	this.getisActive = function()
+	{
+		return this.isActive;
+	}
+	
+	this.setState = function(state)
+	{
+		this.state = state;
+	}
+	
+	this.getState = function()
+	{
+		return this.state;
+	}
+	
+	this.getImage = function()
+	{
+		return this.image;
+	}
 		
 	this.init = function()
 	{
-		     this.image = new Image();
-			 this.image.src = this.enemyAssets[this.type];
-			 this.ready = false;
-			 this.isActive = false;
-			 this.image.onload = function(){
-			 this.isReady = true;
-			 this.state = "Ready";
-			 
+		this.image = new Image();
+		this.image.src = this.enemyAssets[this.type];
+		this.ready = false;
+		this.isActive = false;
+		this.image.onload = function()
+		{
+			this.isReady = true;
+			this.state = "Ready"; 
+		}
 	}
-	}
+	
 	this.getImageSize = function()
 	{
 		return this.image.width;
@@ -74,8 +79,7 @@
 	
 	this.draw = function(context)
 	{
-			//if(this.isReady)
-			context.drawImage(this.image,this.x,this.y);
+		context.drawImage(this.image,this.x,this.y);
 	}
 	
 	this.update = function()
@@ -101,8 +105,7 @@
 			return;
 		}
 		
-		
-        if(this.x >= this.maxDisplacement && this.x < 40000  )
+		if(this.x >= this.maxDisplacement && this.x < 40000  )
 		{
 			this.x = this.maxDisplacement;
 			this.isActive = true;
@@ -111,12 +114,6 @@
 		else 
 		{
 			 this.x += 50;	
-		}
-     	
-		
+		}	
 	}
-	
-	}
-
-	
-	
+}	
