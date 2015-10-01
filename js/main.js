@@ -305,7 +305,7 @@ var checkForEnemyCollision = function()
 				
 				score += 10;
 				priorityTask.count = 0;
-				document.getElementById("score").innerHTML = "Score:" + score;
+				
 			}
 			
 			pickedElement = null;
