@@ -174,7 +174,7 @@ $(document).bind("keydown.space", function()
 		if(laneOne[index].getPostionX() >= (canvas.width * 0.5) && laneOne[index].getPostionX() < 40000 && player.currentLane == 0 )
 		{
 			laneOne[index].setpostionY(0);
-			laneOne[index].setpostion(player.x);
+			laneOne[index].setpostionX(player.x);
 			laneOne[index].setState("PickedUp");
 			laneEnemyCount[player.currentLane]++;
 			pickedElement = laneOne[index];
@@ -184,7 +184,7 @@ $(document).bind("keydown.space", function()
 		else if(laneTwo[index].getPostionX() >= (canvas.width * 0.5) && laneTwo[index].getPostionX() < 40000 && player.currentLane == 1)
 		{
 			laneTwo[index].setpostionY(laneSize);
-			laneTwo[index].setpostion(player.x);
+			laneTwo[index].setpostionX(player.x);
 			
 			laneTwo[index].setState("PickedUp");
 			laneEnemyCount[player.currentLane]++;
@@ -195,7 +195,7 @@ $(document).bind("keydown.space", function()
 		else if(laneThree [index].getPostionX() >= (canvas.width * 0.5) && laneThree[index].getPostionX() < 40000 && player.currentLane == 2)
 		{
 			laneThree[index].setpostionY(laneSize* 2);
-			laneThree[index].setpostion(player.x);
+			laneThree[index].setpostionX(player.x);
 
 			laneThree[index].setState("PickedUp");
 			laneEnemyCount[player.currentLane]++;
@@ -207,7 +207,7 @@ $(document).bind("keydown.space", function()
 		else if(laneFour[index].getPostionX() >= (canvas.width * 0.5) && laneFour[index].getPostionX() < 40000 && player.currentLane == 3)
 		{
 			laneFour[index].setpostionY(laneSize * 3);
-			laneFour[index].setpostion(player.x);
+			laneFour[index].setpostionX(player.x);
 			
 			laneFour[index].setState("PickedUp");
 			laneEnemyCount[player.currentLane]++;

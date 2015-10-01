@@ -24,7 +24,7 @@ function Mail(typeOfMail,posX,posY,maxDisplacement,isready,maxWidth)
 		return this.y;
 	}
 	    
-	this.setpostion = function(xcordinate)
+	this.setpostionX = function(xcordinate)
 	{
 		this.x = xcordinate;
 	}
