@@ -32,14 +32,17 @@ var waveCounter = 1;
 var spawnDelay = 15;
 var spawnTimer = 0;
 var priorityHighlightBoxs = [];
-
+var GameMusic;
+var changelane;
+var sort;
+var wrongsort;
 
 
 var priorityTask = {
 	
-	priority : 0,
+	priority : Math.floor((Math.random() * 4)),
 	count : 0,
-	maxValue : 2,
+	maxValue : Math.floor((Math.random() * 4)),
 	
 }
 
@@ -86,15 +89,20 @@ var player = {
 
 function init()
 {
+	GameMusic= document.getElementById("GameMusic"); ////////////////////////////////////////////////////////////////////
+	changelane= document.getElementById("Movement");///////////////////////////////////////////////////////////
+	
+	
 	canvas = document.getElementById("myCanvas");
 	var body = document.getElementById("body");
 	
-	canvas.width = 1000;
-	canvas.height = 800;
+	canvas.width = 1900;
+	canvas.height = 900;
 
     context = canvas.getContext("2d");
 	
 	body.appendChild(canvas);
+	
 	
    	var assests = ['art/marioWalk/1.png',
 					'art/marioWalk/2.png',
@@ -119,6 +127,8 @@ function init()
 	var wrongFeeback = ['art/trucks/noblue.png','art/trucks/nogreen.png','art/trucks/nored.png','art/trucks/nopink.png'];
 	var correctFeedback =['art/trucks/yesblue.png','art/trucks/yesgreen.png','art/trucks/yesred.png','art/trucks/yespink.png'];
 	var hightlightPath =['art/trucks/bluehighlight.png','art/trucks/greenhighlight.png','art/trucks/redhighlight.png','art/trucks/pinkhighlight.png'];
+	//hightlightPath="art/trucks/bluehighlight.png";
+	
 	for (var p = 0; p < 4 ; p++)
 	{
 		mailBoxes[p] = new Image();
@@ -165,6 +175,8 @@ else
 {
 	player.currentLane--;
 	player.y -= laneSize;
+	changelane.volume=1;
+	changelane.play();
 }
 
 
@@ -173,6 +185,7 @@ $(document).bind("keydown.space", function() {
 
     if(player.state == "walking")
 	{
+				
 	var postionX = 40000;
 	var index = laneEnemyCount[player.currentLane];
 	if(laneOne[index].getPostionX() >= (canvas.width * 0.5) && laneOne[index].getPostionX() < 40000 && player.currentLane == 0 )
@@ -235,6 +248,8 @@ else
 {
 	player.currentLane++;
 	player.y += laneSize;
+	changelane.volume=1;
+	changelane.play();
 }
 
 
@@ -310,6 +325,8 @@ var checkForEnemyCollision = function()
 			if(collides(i,pickedElement) && typeOfMailBox == typeOfPickedElement )
 			{
 			score++;
+			sort=document.getElementById("Sort");
+			sort.play();
 			highlightCell[i] = 1;
 			
 			if(typeOfMailBox == priorityTask.priority)
@@ -322,8 +339,8 @@ var checkForEnemyCollision = function()
 				
 				score += 10;
 				priorityTask.count = 0;
-				priorityTask.priority = Math.floor((Math.random() * 4))
-				
+				priorityTask.priority = Math.floor((Math.random() * 4));
+				priorityTask.maxValue = Math.floor((Math.random() * 4))+1;
 			}
 			
 			pickedElement = null;
@@ -331,6 +348,8 @@ var checkForEnemyCollision = function()
 			}
 			else if(collides(i,pickedElement)){
 			score--;
+			wrongsort=document.getElementById("Incorrect");
+			wrongsort.play();
 			highlightCell[i] = -1;
 			
 			pickedElement = null;
@@ -359,7 +378,7 @@ var initLanes = function(){
 		 var maxWidth = canvas.width;
 		 
 		laneOne[i] = new Mail(type,xPosition,positionY,maxDisplacement,state,maxWidth);
-		laneOne[i].init();
+		laneOne[i].inita();
 	   }
 	   positionY += laneSize;
 	    for(var i = 0; i< 100 ;i++)
@@ -372,7 +391,7 @@ var initLanes = function(){
 		  var maxWidth = canvas.width;
 		 
 		laneTwo[i] = new Mail(type,xPosition,positionY ,maxDisplacement,state,maxWidth);
-		laneTwo[i].init();
+		laneTwo[i].inita();
 	   }
 	   positionY += laneSize;
 	    for(var i = 0; i< 100 ;i++)
@@ -385,7 +404,7 @@ var initLanes = function(){
 		  var maxWidth = canvas.width;
 		
 		laneThree[i] = new Mail(type,xPosition,positionY,maxDisplacement,state,maxWidth);
-		laneThree[i].init();
+		laneThree[i].inita();
 	   }
 	   positionY += laneSize;
 	    for(var i = 0; i< 100 ;i++)
@@ -398,7 +417,7 @@ var initLanes = function(){
 		  var maxWidth = canvas.width;
 		
 		laneFour[i] = new Mail(type,xPosition,positionY,maxDisplacement,state,maxWidth);
-		laneFour[i].init();
+		laneFour[i].inita();
 	   }
 	   
 	   for(var i = 0; i < 4;i++)
@@ -433,7 +452,14 @@ var update = function()
 {
 	 
 	 if(gameState == "gameover")
-		 return;
+	 { 
+     GameMusic.pause();
+	 return; 
+	 }
+	 
+	
+	
+	 
 	 if(gameState == "init" && maxImageSize == imageLoadCount )
 	 {
 		 player.x = canvas.width * 0.60;
@@ -442,7 +468,7 @@ var update = function()
 		 initLanes();
 		 var date = new Date();
 		 StartTime = (date.getTime()/1000)/60;
-		 
+		  GameMusic.play();
 		 gameState = "playing";
 	 }
 	
@@ -518,7 +544,7 @@ var draw = function()
 		{
 			
 			var y = (laneSize * (i+1)) - (converyorImages[i].height * 0.50);
-			context.drawImage(converyorImages[i],0, y,canvas.width *  0.55,converyorImages[i].height);
+			context.drawImage(converyorImages[i],0, y,canvas.width *  0.55,converyorImages[i].height+10);
 			
 		}
 		
@@ -526,12 +552,13 @@ var draw = function()
 		
 	   context.font = "30px Verdana"
 	   context.fillText(" Score:" + score,50,50);
+	   
 	   var timeDiff = getTimeDiffrence();
 	   var timeLeft = gameDuration - timeDiff;
 	   if(timeLeft < 0)
 			timeDiff = 0;
 	   context.fillText("Time:" + timeLeft.toFixed(2),canvas.width/2,50);
-	
+	context.fillText("Priority left:" + (priorityTask.maxValue - priorityTask.count),canvas.width - priorityHighlightBoxs[priorityTask.priority].width ,laneSize * priorityTask.priority +150);
 			
 		
 }

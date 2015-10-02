@@ -55,7 +55,7 @@
 			return this.image;
 		}
 		
-	this.init = function()
+	this.inita = function()
 	{
 		     this.image = new Image();
 			 this.image.src = this.enemyAssets[this.type];
@@ -83,15 +83,15 @@
 		if(this.state == "PickedUp" )
 			return;
 		
-		if(this.state == "dead")
+		if(this.state == "dead")    // when box is out of the screen
 		{
 			this.x += 50;
 			return;
 		}
 		
-		if(this.state == "dropped" && this.x <= (this.maxWidth + 100))
+		if(this.state == "dropped" && this.x <= (this.maxWidth + 100))   // Speed of throw
 		{
-			this.x += 180;
+			this.x += 220  ;
 			return;
 		}
 		else if(this.state == "dropped")
