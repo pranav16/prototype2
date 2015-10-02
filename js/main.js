@@ -35,7 +35,7 @@ var priorityHighlightBoxs = [];
 
 var priorityTask =
 {
-	priority : 0,
+	priority : Math.floor((Math.random() * 4)),
 	count : 0,
 	maxValue : Math.floor((Math.random() * 3)+3),	
 }
@@ -85,19 +85,16 @@ function init()
 	canvas = document.getElementById("myCanvas");
 	var body = document.getElementById("body");
 	
-	canvas.width = 1000;
-	canvas.height = 800;
+	canvas.width = 1900;
+	canvas.height = 900;
 
     context = canvas.getContext("2d");
 	body.appendChild(canvas);
 	
-   	var assests = ['art/marioWalk/1.png',
-					'art/marioWalk/2.png',
-					'art/marioWalk/3.png',
-					'art/marioWalk/4.png',
-					'art/marioWalk/5.png',
-					'art/marioWalk/6.png',
-     				'art/marioWalk/7.png',
+   	var assests = ['art/mailMan/normal.png',
+					'art/mailMan/holding.png',
+					'art/mailMan/left.png',
+					'art/mailMan/right.png',
 					];
     
 					
@@ -177,7 +174,6 @@ $(document).bind("keydown.space", function()
 		var index = laneEnemyCount[player.currentLane];
 		if(laneOne[index].getPostionX() >= (canvas.width * 0.5) && laneOne[index].getPostionX() < 40000 && player.currentLane == 0 )
 		{
-			laneOne[index].setpostionY(player.y);
 			laneOne[index].setpostionX(player.x);
 			laneOne[index].setState("PickedUp");
 			
@@ -188,7 +184,6 @@ $(document).bind("keydown.space", function()
 	
 		else if(laneTwo[index].getPostionX() >= (canvas.width * 0.5) && laneTwo[index].getPostionX() < 40000 && player.currentLane == 1)
 		{
-			laneTwo[index].setpostionY(laneSize);
 			laneTwo[index].setpostionX(player.x);
 			laneTwo[index].setState("PickedUp");
 			
@@ -199,7 +194,6 @@ $(document).bind("keydown.space", function()
 	
 		else if(laneThree [index].getPostionX() >= (canvas.width * 0.5) && laneThree[index].getPostionX() < 40000 && player.currentLane == 2)
 		{
-			laneThree[index].setpostionY(laneSize* 2);
 			laneThree[index].setpostionX(player.x);
 			laneThree[index].setState("PickedUp");
 			
@@ -210,7 +204,6 @@ $(document).bind("keydown.space", function()
 		
 		else if(laneFour[index].getPostionX() >= (canvas.width * 0.5) && laneFour[index].getPostionX() < 40000 && player.currentLane == 3)
 		{
-			laneFour[index].setpostionY(laneSize * 3);
 			laneFour[index].setpostionX(player.x);
 			laneFour[index].setState("PickedUp");
 			
@@ -285,7 +278,7 @@ var updateLanes = function ()
 	
 	if(player.state == "Pickup" && pickedElement != null)
 	{
-		pickedElement.setpostionY(player.currentLane * laneSize);
+		pickedElement.setpostionY(player.currentLane * laneSize +92);
 	}
 }
 
@@ -329,11 +322,10 @@ var checkForEnemyCollision = function()
 
 var initLanes = function()
 {
-	var positionY = player.y;
+	var positionY = player.y-16;
 	for(var i = 0; i< 100 ;i++)
 	{
 		var xPosition = 400 * i * -1;
-		console.log(xPosition);
 		var maxDisplacement = canvas.width * 0.5;
 		var state = false;
 		var type = Math.floor((Math.random() * 4));
@@ -347,7 +339,6 @@ var initLanes = function()
 	for(var i = 0; i< 100 ;i++)
 	{
 		var xPosition = 400 * i * -1;
-		console.log(xPosition);
 		var maxDisplacement = canvas.width * 0.5;
 		var state = false;
 		var type = Math.floor((Math.random() * 4));
@@ -361,7 +352,6 @@ var initLanes = function()
 	for(var i = 0; i< 100 ;i++)
 	{
 		var xPosition = 400 * i * -1;
-		console.log(xPosition);
 		var maxDisplacement = canvas.width * 0.5;
 		var state = false;
 		var type = Math.floor((Math.random() * 4));
@@ -375,7 +365,6 @@ var initLanes = function()
     for(var i = 0; i< 100 ;i++)
 	{
 		var xPosition = 400 * i * -1;
-		console.log(xPosition);
 		var maxDisplacement = canvas.width * 0.5;
 		var state = false;
 		var type = Math.floor((Math.random() * 4));
@@ -416,8 +405,8 @@ var update = function()
 	 
 	 if(gameState == "init" && maxImageSize == imageLoadCount )
 	 {
-		 player.x = canvas.width * 0.60;
-		 player.y = 2 * player.idleFrames[0].width;
+		 player.x = canvas.width * 0.55;
+		 player.y = 2 * player.idleFrames[0].width+10;
 		 laneSize = (canvas.height - 2* player.idleFrames[0].width)/numberOflanes;
 		 initLanes();
 		 var date = new Date();
@@ -472,31 +461,45 @@ var draw = function()
 	for(var i = 0 ; i< 4 ; i++)
 	{
 	    if(highlightCell[i] == 0 )	
-			context.drawImage(mailBoxes[i],canvas.width - mailBoxes[i].width,laneSize * i);
+			context.drawImage(mailBoxes[i], canvas.width - mailBoxes[i].width, laneSize*i+80);
 		else if(highlightCell[i] == 1)
-			context.drawImage(correctFeedbackImages[i],canvas.width - mailBoxes[i].width,laneSize * i);
+			context.drawImage(correctFeedbackImages[i], canvas.width - mailBoxes[i].width, laneSize*i+80);
 		else
-			context.drawImage(wrongFeedBackImages[i],canvas.width - mailBoxes[i].width,laneSize * i);
+			context.drawImage(wrongFeedBackImages[i], canvas.width - mailBoxes[i].width, laneSize*i+80);
 	
         highlightCell[i] = 0;	
 	}
-		
-	context.drawImage(priorityHighlightBoxs[priorityTask.priority],canvas.width - priorityHighlightBoxs[priorityTask.priority].width + 22,laneSize * priorityTask.priority - 18);
+	
+	var offset = 67;
+	if ( priorityTask.priority == 1 )
+	{
+		offset = 53;
+	}
+	else if ( priorityTask.priority == 2 )
+	{
+		offset = 53;
+	}
+	else if ( priorityTask.priority == 3 )
+	{
+		offset = 57;
+	}
+	
+	context.drawImage(priorityHighlightBoxs[priorityTask.priority],canvas.width - priorityHighlightBoxs[priorityTask.priority].width + 22,laneSize * priorityTask.priority+offset);
 	for(var i = 0 ; i< 4 ; i++)
 	{
 		var y = (laneSize * (i+1)) - (converyorImages[i].height * 0.50);
-		context.drawImage(converyorImages[i],0, y,canvas.width *  0.55,converyorImages[i].height);	
+		context.drawImage(converyorImages[i],0, y, canvas.width*0.55, converyorImages[i].height);	
 	}
 		
 	context.font = "30px Verdana"
-	context.fillText(" Score:" + score,50,50);
+	context.fillText(" Score:" + score,50, 35);
 	var timeDiff = getTimeDiffrence();
 	var timeLeft = gameDuration - timeDiff;
 	
 	if(timeLeft < 0)
 		timeDiff = 0;
 	
-	context.fillText("Time:" + timeLeft.toFixed(2),canvas.width/2,50);
+	context.fillText("Time:" + timeLeft.toFixed(2), canvas.width/2-120, 35);
 	context.font = "15px Verdana"
-	context.fillText(priorityTask.maxValue-priorityTask.count + " left", canvas.width-120, priorityTask.priority*laneSize + 125);	
+	context.fillText(priorityTask.maxValue-priorityTask.count + " left", canvas.width-100, priorityTask.priority*laneSize + 200);	
 }
