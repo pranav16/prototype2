@@ -46,7 +46,8 @@ function collides(a, b)
 {
 	var isCollides = false;
 	var temp = b.getPostionY();
-	if(b.getPostionX() > (canvas.width - mailBoxes[a].width) && b.getPostionX() < canvas.width && b.getPostionY() == (a * laneSize))
+	var positionYOfMailBox =  laneSize*a +80;
+	if(b.getPostionX() > (canvas.width - mailBoxes[a].width) && b.getPostionX() < canvas.width && b.getPostionY() >= positionYOfMailBox  && b.getPostionY() <=  (positionYOfMailBox + mailBoxes[a].height))
 	{
 		isCollides = true;
 	}
