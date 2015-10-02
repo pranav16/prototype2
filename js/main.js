@@ -32,6 +32,7 @@ var waveCounter = 1;
 var spawnDelay = 15;
 var spawnTimer = 0;
 var priorityHighlightBoxs = [];
+var refreshIntervalId;
 
 var priorityTask =
 {
@@ -151,7 +152,7 @@ function init()
 		highlightCell[i] = 0;
 	}
 	
-	setInterval(update,frameRate);
+	refreshIntervalId = setInterval(update,frameRate);
 }
 
 $(document).bind("keydown.up", function()
@@ -400,10 +401,7 @@ var checkForTime = function()
 
 var update = function()
 {
-	 if(gameState == "gameover")
-		 return;
-	 
-	 if(gameState == "init" && maxImageSize == imageLoadCount )
+	if(gameState == "init" && maxImageSize == imageLoadCount )
 	 {
 		 player.x = canvas.width * 0.55;
 		 player.y = 2 * player.idleFrames[0].width+10;
@@ -413,11 +411,6 @@ var update = function()
 		 StartTime = (date.getTime()/1000)/60;
 		 gameState = "playing";
 	 }
-	
-	if(gameState != "playing")
-	{
-		return;
-	}
 	
 	spawnTimer++;
 	checkForEnemyCollision();
@@ -431,8 +424,10 @@ var update = function()
 	updateLanes();
 	draw();
 	if(checkForTime())
+	{
+		clearInterval(refreshIntervalId);
 		gameState = "gameover";
-		
+	}		
 }
 
 var draw = function()
