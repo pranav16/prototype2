@@ -424,9 +424,7 @@ var checkForTime = function()
 
 var update = function()
 {
-	
-	
-	
+
 	if(gameState == "init" && maxImageSize == imageLoadCount )
 	 {
 		 player.x = canvas.width * 0.55;
