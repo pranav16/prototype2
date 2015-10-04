@@ -4,7 +4,7 @@ var context;
 var canvas;
 var numberOflanes = 4;
 var laneSize = 0;
-var gameState = "init";
+var gameState = "startup";
 var imageLoadCount = 0;
 var maxImageSize = 7;
 var mail;
@@ -37,6 +37,8 @@ var GameMusic;
 var changelane;
 var sort;
 var wrongsort;
+var startUpScreen;
+var isStartUpReady = false;
 var powerUpCount = 0;
 
 
@@ -148,6 +150,12 @@ function init()
 	
 	bg = new Image();
 	bg.src = 'art/bg.png';
+	startUpScreen = new Image();
+	startUpScreen.src = "art/PriorityMailMenu.png";
+	startUpScreen.onload = function()
+	{
+		isStartUpReady = true;
+	}
 	
 	bg.onload = function()
 	{
@@ -187,6 +195,10 @@ $(document).bind("keydown.up", function()
 
 $(document).bind("keydown.space", function()
 { 
+if(gameState == "startup")
+{
+	gameState = "init";
+}
     var index = laneEnemyCount[player.currentLane];
     if(player.state == "walking")
 	{
@@ -330,6 +342,7 @@ var spawnEnemies = function()
 
 var updateLanes = function ()
 {
+	
 	for(var i = 0;i < 100;i++)
 	{	
 	    var state =  laneOne[i].getState();
@@ -385,8 +398,6 @@ var checkForEnemyCollision = function()
 				{
 					
 					score += 50;
-					sort=document.getElementById("Sort");
-				    sort.play();
 					priorityTask.count = 0;
 					priorityTask.priority = Math.floor((Math.random() * 4));
 					priorityTask.maxValue = Math.floor((Math.random() * 3)+3)
@@ -486,7 +497,11 @@ var checkForTime = function()
 
 var update = function()
 {
-
+if(gameState == "startup")
+{
+	draw();
+	return;
+}
 	if(gameState == "init" && maxImageSize == imageLoadCount )
 	 {
 		 player.x = canvas.width * 0.55;
@@ -521,6 +536,12 @@ var update = function()
 var draw = function()
 { 
 	context.clearRect(0, 0, canvas.width, canvas.height);
+	if(gameState == "startup" && isStartUpReady)
+	{
+		context.drawImage(startUpScreen,0,0 ,canvas.width,canvas.height);
+		return;
+	}
+	
 	context.drawImage(bg,0,0 ,canvas.width,canvas.height);
 	player.draw();
 		
