@@ -100,7 +100,7 @@ function init()
 	canvas = document.getElementById("myCanvas");
 	var body = document.getElementById("body");
 	
-	canvas.width = 1900;
+	canvas.width = 1200;
 	canvas.height = 900;
 
     context = canvas.getContext("2d");
@@ -128,7 +128,7 @@ function init()
 	var enemyAssets = ['art/trucks/bluetruck.png','art/trucks/greentruck.png','art/trucks/redtruck.png','art/trucks/pinktruck.png'];
 	var wrongFeeback = ['art/trucks/noblue.png','art/trucks/nogreen.png','art/trucks/nored.png','art/trucks/nopink.png'];
 	var correctFeedback =['art/trucks/yesblue.png','art/trucks/yesgreen.png','art/trucks/yesred.png','art/trucks/yespink.png'];
-	var hightlightPath =['art/trucks/bluehighlight.png','art/trucks/greenhighlight.png','art/trucks/redhighlight.png','art/trucks/pinkhighlight.png'];
+	var hightlightPath =['art/trucks/bluehighlight.png','art/trucks/greenhighlight.png','art/trucks/redhighlight.png','art/trucks/pinkhighlight.png']; // trucks draw
 	
 	for (var p = 0; p < 4 ; p++)
 	{
@@ -175,7 +175,7 @@ function init()
 	refreshIntervalId = setInterval(update,frameRate);
 }
 
-$(document).bind("keydown.up", function()
+$(document).bind("keydown.up", function(e)
 { 
 	if(player.currentLane == 0)
 	{
@@ -185,15 +185,16 @@ $(document).bind("keydown.up", function()
 	{
 		player.currentLane--;
 		player.y -= laneSize;
-		if (gameState != "gameover")
+		if (gameState != "gameover" && gameState != "startup")
 		{
 			changelane.volume=1;
 	   changelane.play();
 		}
 	}
+	 e.preventDefault();
 });
 
-$(document).bind("keydown.space", function()
+$(document).bind("keydown.space", function(e)
 { 
 if(gameState == "startup")
 {
@@ -303,10 +304,10 @@ if(gameState == "startup")
 		player.state = "walking"
 		powerUpCount = 0;
 	}
-	
+	 e.preventDefault();
 });
 
-$(document).bind("keydown.down", function()
+$(document).bind("keydown.down", function(e)
 { 
 	if(player.currentLane == (numberOflanes - 1))
 	{
@@ -316,12 +317,13 @@ $(document).bind("keydown.down", function()
 	{
 		player.currentLane++;
 		player.y += laneSize;
-	 if (gameState != "gameover")
+	if (gameState != "gameover" && gameState != "startup")
 		{
 			changelane.volume=1;
 	   changelane.play();
 		}
 	}
+	 e.preventDefault();
 });
 
 
