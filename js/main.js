@@ -37,6 +37,7 @@ var GameMusic;
 var changelane;
 var sort;
 var wrongsort;
+var powerUpCount = 0;
 
 
 var priorityTask =
@@ -77,7 +78,9 @@ var player =
 	draw : function ()
 	{	
 		if( this.state == "walking" || this.state == "Pickup")
-			this.playIdle();	
+			this.playIdle();
+		else if (this.state == "powerup")
+			this.playIdle();
 	},
 	
 	playIdle : function()
@@ -184,9 +187,10 @@ $(document).bind("keydown.up", function()
 
 $(document).bind("keydown.space", function()
 { 
+    var index = laneEnemyCount[player.currentLane];
     if(player.state == "walking")
 	{
-		var index = laneEnemyCount[player.currentLane];
+		
 		if(laneOne[index].getPostionX() >= (canvas.width * 0.5) && laneOne[index].getPostionX() < 40000 && player.currentLane == 0 )
 		{
 			laneOne[index].setpostionX(player.x);
@@ -227,12 +231,67 @@ $(document).bind("keydown.space", function()
 			player.state = "Pickup";
 		}
 	}
-	else if(player.state = "Pickup")
+	else if(player.state == "Pickup")
 	{
 		pickedElement.setState("dropped");
 		//pickedElement.setState("powerDropped");
 		player.state = "walking";
 	}
+	else if(player.state == "powerup")
+	{
+		powerUpCount++;
+		if(laneOne[index].getPostionX() >= (canvas.width * 0.5) && laneOne[index].getPostionX() < 40000 && player.currentLane == 0 )
+		{
+			laneOne[index].setpostionX(player.x);
+			laneOne[index].setState("powerup");
+			
+			laneEnemyCount[player.currentLane]++;
+			pickedElement = laneOne[index];
+			pickedElement.y = player.currentLane * laneSize +92;
+			pickedElement.x = player.x;
+			
+		}
+	
+		else if(laneTwo[index].getPostionX() >= (canvas.width * 0.5) && laneTwo[index].getPostionX() < 40000 && player.currentLane == 1)
+		{
+			laneTwo[index].setpostionX(player.x);
+			laneTwo[index].setState("powerup");
+			
+			laneEnemyCount[player.currentLane]++;
+			pickedElement = laneTwo[index];
+			pickedElement.y = player.currentLane * laneSize +92;
+			pickedElement.x = player.x;
+			
+		}
+	
+		else if(laneThree [index].getPostionX() >= (canvas.width * 0.5) && laneThree[index].getPostionX() < 40000 && player.currentLane == 2)
+		{
+			laneThree[index].setpostionX(player.x);
+			laneThree[index].setState("powerup");
+			
+			laneEnemyCount[player.currentLane]++;
+			pickedElement = laneThree[index];
+			pickedElement.y = player.currentLane * laneSize +92;
+			pickedElement.x = player.x;
+		}
+		
+		else if(laneFour[index].getPostionX() >= (canvas.width * 0.5) && laneFour[index].getPostionX() < 40000 && player.currentLane == 3)
+		{
+			laneFour[index].setpostionX(player.x);
+			laneFour[index].setState("powerup");
+			laneEnemyCount[player.currentLane]++;
+			pickedElement = laneFour[index];
+			pickedElement.y =player.currentLane * laneSize +92;
+			pickedElement.x = player.x;
+			
+		}
+	}
+	if(powerUpCount > 11)
+	{
+		player.state = "walking"
+		powerUpCount = 0;
+	}
+	
 });
 
 $(document).bind("keydown.down", function()
@@ -325,10 +384,13 @@ var checkForEnemyCollision = function()
 				if(priorityTask.count >= priorityTask.maxValue)
 				{
 					
-					score += 10;
+					score += 50;
+					sort=document.getElementById("Sort");
+				    sort.play();
 					priorityTask.count = 0;
 					priorityTask.priority = Math.floor((Math.random() * 4));
 					priorityTask.maxValue = Math.floor((Math.random() * 3)+3)
+					player.state = "powerup";
 				}
 				pickedElement = null;
 			}
@@ -355,7 +417,7 @@ var initLanes = function()
 		var type = Math.floor((Math.random() * 4));
 		var maxWidth = canvas.width;
 		 
-		laneOne[i] = new Mail(type,xPosition,positionY,maxDisplacement,state,maxWidth);
+		laneOne[i] = new Mail(type,xPosition,positionY,maxDisplacement,state,maxWidth,laneSize);
 		laneOne[i].init();
 	}
 	
@@ -368,7 +430,7 @@ var initLanes = function()
 		var type = Math.floor((Math.random() * 4));
 		var maxWidth = canvas.width;
 		 
-		laneTwo[i] = new Mail(type,xPosition,positionY ,maxDisplacement,state,maxWidth);
+		laneTwo[i] = new Mail(type,xPosition,positionY ,maxDisplacement,state,maxWidth,laneSize);
 		laneTwo[i].init();
 	}
 	
@@ -381,7 +443,7 @@ var initLanes = function()
 		var type = Math.floor((Math.random() * 4));
 		var maxWidth = canvas.width;
 		
-		laneThree[i] = new Mail(type,xPosition,positionY,maxDisplacement,state,maxWidth);
+		laneThree[i] = new Mail(type,xPosition,positionY,maxDisplacement,state,maxWidth,laneSize);
 		laneThree[i].init();
 	}
 	
@@ -394,7 +456,7 @@ var initLanes = function()
 		var type = Math.floor((Math.random() * 4));
 		 var maxWidth = canvas.width;
 		
-		laneFour[i] = new Mail(type,xPosition,positionY,maxDisplacement,state,maxWidth);
+		laneFour[i] = new Mail(type,xPosition,positionY,maxDisplacement,state,maxWidth,laneSize);
 		laneFour[i].init();
 	}
 	   

@@ -1,4 +1,4 @@
-function Mail(typeOfMail,posX,posY,maxDisplacement,isready,maxWidth)
+function Mail(typeOfMail,posX,posY,maxDisplacement,isready,maxWidth,laneSize)
 {
 	this.type = typeOfMail;
 	this.x = posX;
@@ -8,6 +8,7 @@ function Mail(typeOfMail,posX,posY,maxDisplacement,isready,maxWidth)
 	this.enemyAssets = ['art/Enemies/blue.png','art/Enemies/green.png','art/Enemies/red.png','art/Enemies/pink.png'];
     this.isActive = isready;
 	this.maxWidth = maxWidth;
+	this.laneSize = laneSize;
 		
 	this.getType = function()
 	{
@@ -87,6 +88,23 @@ function Mail(typeOfMail,posX,posY,maxDisplacement,isready,maxWidth)
 		if(this.state == "PickedUp" )
 			return;
 		
+		if(this.state == "powerup")
+		{
+			var laneHeight = (typeOfMail+1)*laneSize - this.image.width;
+			if(this.y >= laneHeight + 50 && this.y >= laneHeight)
+				this.y = laneHeight;
+			else if (this.y >= laneHeight - 50 && this.y <= laneHeight)
+				this.y = laneHeight;
+			else
+			this.y += 150;
+			 
+			 if(this.y == laneHeight)
+					this.state = "dropped";
+		
+		
+			return;
+		}
+		
 		if(this.state == "dead")
 		{
 			this.x += 50;
@@ -95,7 +113,7 @@ function Mail(typeOfMail,posX,posY,maxDisplacement,isready,maxWidth)
 		
 		if(this.state == "dropped" && this.x <= (this.maxWidth + 100))
 		{
-			this.x += 180;
+			this.x += 200;
 			return;
 		}
 		else if(this.state == "dropped")
