@@ -29,7 +29,7 @@ var gameDuration = 2;
 var numberOfEnemiesToSpawn = 1;
 var numberOfWaves = 15;
 var waveCounter = 1;
-var spawnDelay = 15;
+var spawnDelay = 10;
 var spawnTimer = 0;
 var priorityHighlightBoxs = [];
 var refreshIntervalId;
