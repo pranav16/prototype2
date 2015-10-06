@@ -94,8 +94,8 @@ var player =
 
 function init()
 {
-	GameMusic= document.getElementById("GameMusic"); ////////////////////////////////////////////////////////////////////
-	changelane= document.getElementById("Movement");///////////////////////////////////////////////////////////
+	GameMusic= document.getElementById("GameMusic"); 
+	changelane= document.getElementById("Movement");
 	
 	canvas = document.getElementById("myCanvas");
 	var body = document.getElementById("body");
@@ -107,8 +107,8 @@ function init()
 	body.appendChild(canvas);
 	
    	var assests = ['art/mailMan/normal.png',
-					'art/mailMan/holding.png',
 					'art/mailMan/left.png',
+					'art/mailMan/holding.png',
 					'art/mailMan/right.png',
 					];
     
@@ -196,19 +196,19 @@ $(document).bind("keydown.up", function(e)
 
 $(document).bind("keydown.space", function(e)
 { 
-if(gameState == "startup")
-{
-	gameState = "init";
-}
+	if(gameState == "startup")
+	{
+		gameState = "init";
+	}
+	
     var index = laneEnemyCount[player.currentLane];
     if(player.state == "walking")
 	{
-		
 		if(laneOne[index].getPostionX() >= (canvas.width * 0.5) && laneOne[index].getPostionX() < 40000 && player.currentLane == 0 )
 		{
 			laneOne[index].setpostionX(player.x);
 			laneOne[index].setState("PickedUp");
-			
+			player.currentAnimationKey = (player.currentAnimationKey+1)%4;
 			laneEnemyCount[player.currentLane]++;
 			pickedElement = laneOne[index];
 			player.state = "Pickup";
@@ -218,7 +218,7 @@ if(gameState == "startup")
 		{
 			laneTwo[index].setpostionX(player.x);
 			laneTwo[index].setState("PickedUp");
-			
+			player.currentAnimationKey = (player.currentAnimationKey+1)%4;
 			laneEnemyCount[player.currentLane]++;
 			pickedElement = laneTwo[index];
 			player.state = "Pickup";
@@ -228,7 +228,7 @@ if(gameState == "startup")
 		{
 			laneThree[index].setpostionX(player.x);
 			laneThree[index].setState("PickedUp");
-			
+			player.currentAnimationKey = (player.currentAnimationKey+1)%4;
 			laneEnemyCount[player.currentLane]++;
 			pickedElement = laneThree[index];
 			player.state = "Pickup";
@@ -238,7 +238,7 @@ if(gameState == "startup")
 		{
 			laneFour[index].setpostionX(player.x);
 			laneFour[index].setState("PickedUp");
-			
+			player.currentAnimationKey = (player.currentAnimationKey+1)%4;
 			laneEnemyCount[player.currentLane]++;
 			pickedElement = laneFour[index];
 			player.state = "Pickup";
@@ -344,7 +344,6 @@ var spawnEnemies = function()
 
 var updateLanes = function ()
 {
-	
 	for(var i = 0;i < 100;i++)
 	{	
 	    var state =  laneOne[i].getState();
@@ -608,4 +607,9 @@ var draw = function()
 	context.fillText("Time:" + timeLeft.toFixed(2), canvas.width/2-120, 35);
 	context.font = "20px Verdana"
 	context.fillText(priorityTask.maxValue-priorityTask.count + " left", canvas.width-100, priorityTask.priority*laneSize + 200);	
+}
+
+function sleepFor( sleepDuration ){
+    var now = new Date().getTime();
+    while(new Date().getTime() < now + sleepDuration){ /* do nothing */ } 
 }
