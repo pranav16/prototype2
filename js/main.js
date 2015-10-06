@@ -14,6 +14,7 @@ var laneThree = [];
 var laneFour = [];
 var laneEnemyCount = [];
 var pickedElement;
+var pickedElements = [];
 var score = 0;
 var mailBoxes = [];
 var mailBoxType = [];
@@ -254,11 +255,11 @@ $(document).bind("keydown.space", function(e)
 			pickedElement = laneFour[index];
 			player.state = "Pickup";
 		}
+		pickedElements.push(pickedElement);
 	}
 	else if(player.state == "Pickup")
 	{
 		pickedElement.setState("dropped");
-		//pickedElement.setState("powerDropped");
 		player.state = "walking";
 	}
 	else if(player.state == "powerup")
@@ -307,8 +308,8 @@ $(document).bind("keydown.space", function(e)
 			pickedElement = laneFour[index];
 			pickedElement.y =player.currentLane * laneSize +92;
 			pickedElement.x = player.x;
-			
 		}
+		pickedElements.push(pickedElement);
 	}
 	if(powerUpCount > 11)
 	{
@@ -392,9 +393,14 @@ var checkForEnemyCollision = function()
 	{
 		for(var i = 0;i < 4 ;i++)
 		{
+				
+			for(var j = 0 ;j < pickedElements.length; j++)
+			{
+			if(pickedElements[j] == null)
+				continue;
 			var typeOfMailBox = mailBoxType[i];
-			var typeOfPickedElement = pickedElement.getType();
-			if(collides(i,pickedElement) && typeOfMailBox == typeOfPickedElement )
+			var typeOfPickedElement = pickedElements[j].getType();
+			if(collides(i,pickedElements[j]) && typeOfMailBox == typeOfPickedElement )
 			{
 				score++;
 				sort=document.getElementById("Sort");
@@ -415,19 +421,25 @@ var checkForEnemyCollision = function()
 					priorityTask.maxValue = Math.floor((Math.random() * 3)+3)
 					player.state = "powerup";
 				}
-				pickedElement = null;
+				
 				break;
 			}
-			else if(collides(i,pickedElement))
+			else if(collides(i,pickedElements[j]))
 			{
+				if(typeOfMailBox == priorityTask.priority)
+				{	
+					priorityTask.count = 0;
+				}
+				
 				score--;
 				wrongsort=document.getElementById("Incorrect");
-			wrongsort.play();
+			    wrongsort.play();
 				highlightCell[i] = -1;
-				pickedElement = null;
+				
 				break;
 			}
 		}
+	}
 	}
 }
 
