@@ -41,7 +41,7 @@ var wrongsort;
 var startUpScreen;
 var isStartUpReady = false;
 var powerUpCount = 0;
-
+var power;
 
 var priorityTask =
 {
@@ -128,6 +128,7 @@ function init()
 {
 	GameMusic= document.getElementById("GameMusic"); 
 	changelane= document.getElementById("Movement");
+	power=  document.getElementById("Power");
 	
 	canvas = document.getElementById("myCanvas");
 	var body = document.getElementById("body");
@@ -231,6 +232,7 @@ function handlePowerUp()
 	var index = laneEnemyCount[player.currentLane];
 	if(player.state == "powerup")
 	{
+		power.play();
 		powerUpCount++;
 		if(laneOne[index].getPostionX() >= (canvas.width * 0.5) && laneOne[index].getPostionX() < 40000 && player.currentLane == 0 )
 		{
