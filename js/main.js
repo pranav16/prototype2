@@ -239,6 +239,7 @@ function handlePowerUp()
 			
 			laneEnemyCount[player.currentLane]++;
 			pickedElement = laneOne[index];
+			pickedElements.push(pickedElement);
 			pickedElement.y = player.currentLane * laneSize +92;
 			pickedElement.x = player.x;
 		}
@@ -250,6 +251,7 @@ function handlePowerUp()
 			
 			laneEnemyCount[player.currentLane]++;
 			pickedElement = laneTwo[index];
+			pickedElements.push(pickedElement);
 			pickedElement.y = player.currentLane * laneSize +92;
 			pickedElement.x = player.x;
 		}
@@ -261,6 +263,7 @@ function handlePowerUp()
 			
 			laneEnemyCount[player.currentLane]++;
 			pickedElement = laneThree[index];
+			pickedElements.push(pickedElement);
 			pickedElement.y = player.currentLane * laneSize +92;
 			pickedElement.x = player.x;
 		}
@@ -271,9 +274,12 @@ function handlePowerUp()
 			laneFour[index].setState("powerup");
 			laneEnemyCount[player.currentLane]++;
 			pickedElement = laneFour[index];
+			pickedElements.push(pickedElement);
 			pickedElement.y =player.currentLane * laneSize +92;
 			pickedElement.x = player.x;
 		}
+		
+		
 		
 		if(powerUpCount > 100)
 		{
@@ -447,53 +453,53 @@ var checkForEnemyCollision = function()
 	{
 		for(var i = 0;i < 4 ;i++)
 		{
-				
 			for(var j = 0 ;j < pickedElements.length; j++)
 			{
-			if(pickedElements[j] == null)
-				continue;
-			var typeOfMailBox = mailBoxType[i];
-			var typeOfPickedElement = pickedElements[j].getType();
-			if(collides(i,pickedElements[j]) && typeOfMailBox == typeOfPickedElement )
-			{
-				score++;
-				sort=document.getElementById("Sort");
-				sort.play();
-				highlightCell[i] = 1;
+				if(pickedElements[j] == null)
+					continue;
 				
-				if(typeOfMailBox == priorityTask.priority)
-				{	
-					priorityTask.count++;
-				}
-				
-				if(priorityTask.count >= priorityTask.maxValue)
+				var typeOfMailBox = mailBoxType[i];
+				var typeOfPickedElement = pickedElements[j].getType();
+				if(collides(i,pickedElements[j]) && typeOfMailBox == typeOfPickedElement )
 				{
+					score++;
+					sort=document.getElementById("Sort");
+					sort.play();
+					highlightCell[i] = 1;
 					
-					score += 50;
-					priorityTask.count = 0;
-					priorityTask.priority = Math.floor((Math.random() * 4));
-					priorityTask.maxValue = Math.floor((Math.random() * 3)+3)
-					player.state = "powerup";
+					if(typeOfMailBox == priorityTask.priority)
+					{	
+						priorityTask.count++;
+					}
+					
+					if(priorityTask.count >= priorityTask.maxValue)
+					{
+						
+						score += 50;
+						priorityTask.count = 0;
+						priorityTask.priority = Math.floor((Math.random() * 4));
+						priorityTask.maxValue = Math.floor((Math.random() * 3)+3)
+						player.state = "powerup";
+					}
+					
+					break;
 				}
-				
-				break;
-			}
-			else if(collides(i,pickedElements[j]))
-			{
-				if(typeOfMailBox == priorityTask.priority)
-				{	
-					priorityTask.count = 0;
+				else if(collides(i,pickedElements[j]))
+				{
+					if(typeOfMailBox == priorityTask.priority)
+					{	
+						priorityTask.count = 0;
+					}
+					
+					score--;
+					wrongsort=document.getElementById("Incorrect");
+					wrongsort.play();
+					highlightCell[i] = -1;
+					
+					break;
 				}
-				
-				score--;
-				wrongsort=document.getElementById("Incorrect");
-			    wrongsort.play();
-				highlightCell[i] = -1;
-				
-				break;
 			}
 		}
-	}
 	}
 }
 
