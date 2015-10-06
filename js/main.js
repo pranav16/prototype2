@@ -39,6 +39,7 @@ var changelane;
 var sort;
 var wrongsort;
 var startUpScreen;
+var presspace;
 var isStartUpReady = false;
 var powerUpCount = 0;
 var power;
@@ -183,6 +184,8 @@ function init()
 	
 	bg = new Image();
 	bg.src = 'art/bg.png';
+	presspace= new Image();
+	presspace.src="art/PressSpaceToStart.png";
 	startUpScreen = new Image();
 	startUpScreen.src = "art/PriorityMailMenu.png";
 	startUpScreen.onload = function()
@@ -638,7 +641,8 @@ var blinkvanish=0;
 		context.save();
 	context.font = "50px Verdana";
 	context.fillStyle='red';
-	context.fillText("Press SPACE to start",canvas.width/2 - 250,canvas.height-40);
+	//context.fillText("Press SPACE to start",canvas.width/2 - 250,canvas.height-40);
+	context.drawImage(presspace,canvas.width/2 - 250,canvas.height-100 ,canvas.width/2,canvas.height/10);
 	context.restore();
 	blinkvanish++;
 	}
