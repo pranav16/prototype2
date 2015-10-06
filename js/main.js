@@ -68,7 +68,7 @@ var player =
 {
 	x : 100,
 	y : 100,
-	state : "walking",
+	state : "standing",
 	currentAnimationKey : 0,
 	currentLane : 0,
 	idleFrames : [],
@@ -78,15 +78,37 @@ var player =
 		this.state = state;
 	},
 	
-	counter : 5,
+	counter : 2,
 	
 	draw : function ()
 	{	
-		if( this.state == "walking" )
+		if( this.state == "standing" )
 		{
 			this.playIdle();
 		}
-		else if ( this.state == "Pickup")
+		else if ( this.state == "turnLeft")
+		{
+			this.counter--;
+			if ( this.counter == 0 )
+			{
+				this.counter = 2;
+				this.state = "pickUp";
+				this.currentAnimationKey = (this.currentAnimationKey+1)%4;
+			}
+			this.playIdle();
+		}
+		else if ( this.state == "turnRight")
+		{
+			this.counter--;
+			if ( this.counter == 0 )
+			{
+				this.counter = 2;
+				this.state = "standing";
+				this.currentAnimationKey = (this.currentAnimationKey+1)%4;
+			}
+			this.playIdle();
+		}
+		else if ( this.state == "pickUp" || this.state == "readyToThrow" )
 		{
 			this.playIdle();
 		}
@@ -99,7 +121,7 @@ var player =
 	playIdle : function()
 	{	
      	context.drawImage(this.idleFrames[this.currentAnimationKey], this.x, this.y);
-		this.currentAnimationKey = (this.currentAnimationKey + 1) % this.idleFrames.length;
+		//this.currentAnimationKey = (this.currentAnimationKey + 1) % this.idleFrames.length;
 	}
 }
 
@@ -214,53 +236,41 @@ $(document).bind("keydown.space", function(e)
 	}
 	
     var index = laneEnemyCount[player.currentLane];
-    if(player.state == "walking")
+    if(player.state == "standing")
 	{
 		if(laneOne[index].getPostionX() >= (canvas.width * 0.5) && laneOne[index].getPostionX() < 40000 && player.currentLane == 0 )
 		{
-			laneOne[index].setpostionX(player.x);
 			laneOne[index].setState("PickedUp");
 			player.currentAnimationKey = (player.currentAnimationKey+1)%4;
-			laneEnemyCount[player.currentLane]++;
-			pickedElement = laneOne[index];
-			player.state = "Pickup";
+			player.state = "turnLeft";
 		}
 	
 		else if(laneTwo[index].getPostionX() >= (canvas.width * 0.5) && laneTwo[index].getPostionX() < 40000 && player.currentLane == 1)
 		{
-			laneTwo[index].setpostionX(player.x);
 			laneTwo[index].setState("PickedUp");
 			player.currentAnimationKey = (player.currentAnimationKey+1)%4;
-			laneEnemyCount[player.currentLane]++;
-			pickedElement = laneTwo[index];
-			player.state = "Pickup";
+			player.state = "turnLeft";
 		}
 	
 		else if(laneThree [index].getPostionX() >= (canvas.width * 0.5) && laneThree[index].getPostionX() < 40000 && player.currentLane == 2)
 		{
-			laneThree[index].setpostionX(player.x);
 			laneThree[index].setState("PickedUp");
 			player.currentAnimationKey = (player.currentAnimationKey+1)%4;
-			laneEnemyCount[player.currentLane]++;
-			pickedElement = laneThree[index];
-			player.state = "Pickup";
+			player.state = "turnLeft";
 		}
 		
 		else if(laneFour[index].getPostionX() >= (canvas.width * 0.5) && laneFour[index].getPostionX() < 40000 && player.currentLane == 3)
 		{
-			laneFour[index].setpostionX(player.x);
 			laneFour[index].setState("PickedUp");
 			player.currentAnimationKey = (player.currentAnimationKey+1)%4;
-			laneEnemyCount[player.currentLane]++;
-			pickedElement = laneFour[index];
-			player.state = "Pickup";
+			player.state = "turnLeft";
 		}
-		pickedElements.push(pickedElement);
 	}
-	else if(player.state == "Pickup")
+	else if(player.state == "readyToThrow")
 	{
 		pickedElement.setState("dropped");
-		player.state = "walking";
+		player.currentAnimationKey = (player.currentAnimationKey+1)%4;
+		player.state = "turnRight";
 	}
 	else if(player.state == "powerup")
 	{
@@ -313,11 +323,13 @@ $(document).bind("keydown.space", function(e)
 	}
 	if(powerUpCount > 11)
 	{
-		player.state = "walking"
+		player.state = "standing"
 		powerUpCount = 0;
 	}
 	 e.preventDefault();
 });
+
+
 
 $(document).bind("keydown.down", function(e)
 { 
@@ -338,6 +350,45 @@ $(document).bind("keydown.down", function(e)
 	 e.preventDefault();
 });
 
+var updatePlayer = function()
+{
+	var index = laneEnemyCount[player.currentLane];
+	if(player.state == "pickUp")
+	{
+		if(laneOne[index].getPostionX() >= (canvas.width * 0.5) && laneOne[index].getPostionX() < 40000 && player.currentLane == 0 )
+		{
+			laneOne[index].setpostionX(player.x);
+			laneEnemyCount[player.currentLane]++;
+			pickedElement = laneOne[index];
+			player.state = "readyToThrow";
+		}
+	
+		else if(laneTwo[index].getPostionX() >= (canvas.width * 0.5) && laneTwo[index].getPostionX() < 40000 && player.currentLane == 1)
+		{
+			laneTwo[index].setpostionX(player.x);
+			laneEnemyCount[player.currentLane]++;
+			pickedElement = laneTwo[index];
+			player.state = "readyToThrow";
+		}
+	
+		else if(laneThree [index].getPostionX() >= (canvas.width * 0.5) && laneThree[index].getPostionX() < 40000 && player.currentLane == 2)
+		{
+			laneThree[index].setpostionX(player.x);
+			laneEnemyCount[player.currentLane]++;
+			pickedElement = laneThree[index];
+			player.state = "readyToThrow";
+		}
+		
+		else if(laneFour[index].getPostionX() >= (canvas.width * 0.5) && laneFour[index].getPostionX() < 40000 && player.currentLane == 3)
+		{
+			laneFour[index].setpostionX(player.x);
+			laneEnemyCount[player.currentLane]++;
+			pickedElement = laneFour[index];
+			player.state = "readyToThrow";
+		}
+		pickedElements.push(pickedElement);
+	}
+}
 
 var spawnEnemies = function()
 {
@@ -381,9 +432,9 @@ var updateLanes = function ()
 			laneFour[i].update();
 	}	
 	
-	if(player.state == "Pickup" && pickedElement != null)
+	if((player.state == "pickUp"||player.state == "readyToThrow") && pickedElement != null)
 	{
-		pickedElement.setpostionY(player.currentLane * laneSize +92);
+		pickedElement.setpostionY(player.currentLane * laneSize +116);
 	}
 }
 
@@ -549,6 +600,7 @@ if(gameState == "startup")
 		spawnTimer = 0;
 	}
 
+	updatePlayer();
 	updateLanes();
 	draw();
 	if(checkForTime())
@@ -631,5 +683,5 @@ var draw = function()
 	
 	context.fillText("Time:" + timeLeft.toFixed(2), canvas.width/2-120, 35);
 	context.font = "20px Verdana"
-	context.fillText(priorityTask.maxValue-priorityTask.count + " left", canvas.width-100, priorityTask.priority*laneSize + 200);	
+	context.fillText(priorityTask.maxValue-priorityTask.count, canvas.width-90, priorityTask.priority*laneSize + 200);	
 }
