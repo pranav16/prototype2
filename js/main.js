@@ -39,11 +39,13 @@ var changelane;
 var sort;
 var wrongsort;
 var startUpScreen;
+var presspace;
 var isStartUpReady = false;
 var powerUpCount = 0;
 var powerUpTruck = -1;
 var truckPos = 0;
 var front = true;
+var power;
 
 var priorityTask =
 {
@@ -130,6 +132,7 @@ function init()
 {
 	GameMusic= document.getElementById("GameMusic"); 
 	changelane= document.getElementById("Movement");
+	power=  document.getElementById("Power");
 	
 	canvas = document.getElementById("myCanvas");
 	var body = document.getElementById("body");
@@ -184,6 +187,8 @@ function init()
 	
 	bg = new Image();
 	bg.src = 'art/bg.png';
+	presspace= new Image();
+	presspace.src="art/PressSpaceToStart.png";
 	startUpScreen = new Image();
 	startUpScreen.src = "art/PriorityMailMenu.png";
 	startUpScreen.onload = function()
@@ -237,6 +242,7 @@ function handlePowerUp()
 	var index = laneEnemyCount[player.currentLane];
 	if(player.state == "powerup")
 	{
+		power.play();
 		powerUpCount++;
 		if(laneOne[index].getPostionX() >= (canvas.width * 0.5) && laneOne[index].getPostionX() < 40000 && player.currentLane == 0 )
 		{
@@ -632,13 +638,33 @@ if(gameState == "startup")
 		GameMusic.pause();
 	}		
 }
-
+var blinkvanish=0;
+ function blink()
+{
+		
+	if (blinkvanish > 10)
+	{context.fillText(" ",canvas.width/2 - 250,canvas.height-40);
+	blinkvanish=0;
+    }	
+	
+	else
+	{
+		context.save();
+	context.font = "50px Verdana";
+	context.fillStyle='red';
+	//context.fillText("Press SPACE to start",canvas.width/2 - 250,canvas.height-40);
+	context.drawImage(presspace,canvas.width/2 - 250,canvas.height-100 ,canvas.width/2,canvas.height/10);
+	context.restore();
+	blinkvanish++;
+	}
+}
 var draw = function()
 { 
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	if(gameState == "startup" && isStartUpReady)
 	{
 		context.drawImage(startUpScreen,0,0 ,canvas.width,canvas.height);
+		blink();
 		return;
 	}
 	
