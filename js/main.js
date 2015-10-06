@@ -41,7 +41,9 @@ var wrongsort;
 var startUpScreen;
 var isStartUpReady = false;
 var powerUpCount = 0;
-
+var powerUpTruck = -1;
+var truckPos = 0;
+var front = true;
 
 var priorityTask =
 {
@@ -212,7 +214,11 @@ $(document).bind("keydown.up", function(e)
 	if(player.currentLane == 0)
 	{
 		return;
-	}	
+	}
+	else if ( player.state == "turnLeft" || player.state == "turnRight" || player.state == "pickUp")	
+	{
+		return;
+	}
 	else 
 	{
 		player.currentLane--;
@@ -346,6 +352,10 @@ $(document).bind("keydown.down", function(e)
 	{
 		return;
 	}
+	else if ( player.state == "turnLeft" || player.state == "turnRight" || player.state == "pickUp")	
+	{
+		return;
+	}
 	else 
 	{
 		player.currentLane++;
@@ -474,9 +484,9 @@ var checkForEnemyCollision = function()
 					
 					if(priorityTask.count >= priorityTask.maxValue)
 					{
-						
 						score += 50;
 						priorityTask.count = 0;
+						powerUpTruck = priorityTask.priority;
 						priorityTask.priority = Math.floor((Math.random() * 4));
 						priorityTask.maxValue = Math.floor((Math.random() * 3)+3)
 						player.state = "powerup";
@@ -652,14 +662,47 @@ var draw = function()
 	 	laneFour[i].draw(context);
 	}
 	
+	var localTruckPos;
+	var glowPos;
 	for(var i = 0 ; i< 4 ; i++)
 	{
-	    if(highlightCell[i] == 0 )	
-			context.drawImage(mailBoxes[i], canvas.width - mailBoxes[i].width, laneSize*i+80);
-		else if(highlightCell[i] == 1)
-			context.drawImage(correctFeedbackImages[i], canvas.width - mailBoxes[i].width, laneSize*i+80);
+		if ( powerUpTruck == i )
+		{
+			if ( front )
+			{
+				truckPos += 30;
+				localTruckPos = (canvas.width - mailBoxes[i].width) + truckPos;
+				glowPos = localTruckPos;
+				if ( localTruckPos > canvas.width+20 )
+				{
+					front = false;
+				}
+			}
+			else
+			{
+				truckPos -= 30;
+				localTruckPos = (canvas.width - mailBoxes[i].width) + truckPos;
+				glowPos = localTruckPos;
+				if ( localTruckPos < (canvas.width - mailBoxes[i].width) )
+				{
+					front = true;
+					localTruckPos = canvas.width - mailBoxes[i].width;
+					glowPos = localTruckPos;
+					powerUpTruck = -1;
+				}
+			}
+		}
 		else
-			context.drawImage(wrongFeedBackImages[i], canvas.width - mailBoxes[i].width, laneSize*i+80);
+		{
+			localTruckPos = canvas.width - mailBoxes[i].width;
+		}
+		
+	    if(highlightCell[i] == 0 )	
+			context.drawImage(mailBoxes[i], localTruckPos, laneSize*i+80);
+		else if(highlightCell[i] == 1)
+			context.drawImage(correctFeedbackImages[i], localTruckPos, laneSize*i+80);
+		else
+			context.drawImage(wrongFeedBackImages[i], localTruckPos, laneSize*i+80);
 	
         highlightCell[i] = 0;	
 	}
@@ -678,7 +721,15 @@ var draw = function()
 		offset = 57;
 	}
 	
-	context.drawImage(priorityHighlightBoxs[priorityTask.priority],canvas.width - priorityHighlightBoxs[priorityTask.priority].width + 22,laneSize * priorityTask.priority+offset);
+	if ( priorityTask.priority == powerUpTruck )
+	{
+		context.drawImage(priorityHighlightBoxs[priorityTask.priority], glowPos-20, laneSize * priorityTask.priority+offset);
+	}
+	else
+	{
+		context.drawImage(priorityHighlightBoxs[priorityTask.priority], canvas.width-priorityHighlightBoxs[priorityTask.priority].width+22,laneSize * priorityTask.priority+offset);
+	}
+	
 	for(var i = 0 ; i< 4 ; i++)
 	{
 		var y = (laneSize * (i+1)) - (converyorImages[i].height * 0.50);
