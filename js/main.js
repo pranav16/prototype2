@@ -622,13 +622,32 @@ if(gameState == "startup")
 		GameMusic.pause();
 	}		
 }
-
+var blinkvanish=0;
+ function blink()
+{
+		
+	if (blinkvanish > 10)
+	{context.fillText(" ",canvas.width/2 - 250,canvas.height-40);
+	blinkvanish=0;
+    }	
+	
+	else
+	{
+		context.save();
+	context.font = "50px Verdana";
+	context.fillStyle='red';
+	context.fillText("Press SPACE to start",canvas.width/2 - 250,canvas.height-40);
+	context.restore();
+	blinkvanish++;
+	}
+}
 var draw = function()
 { 
 	context.clearRect(0, 0, canvas.width, canvas.height);
 	if(gameState == "startup" && isStartUpReady)
 	{
 		context.drawImage(startUpScreen,0,0 ,canvas.width,canvas.height);
+		blink();
 		return;
 	}
 	
