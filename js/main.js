@@ -77,12 +77,22 @@ var player =
 		this.state = state;
 	},
 	
+	counter : 5,
+	
 	draw : function ()
 	{	
-		if( this.state == "walking" || this.state == "Pickup")
+		if( this.state == "walking" )
+		{
 			this.playIdle();
+		}
+		else if ( this.state == "Pickup")
+		{
+			this.playIdle();
+		}
 		else if (this.state == "powerup")
+		{
 			this.playIdle();
+		}
 	},
 	
 	playIdle : function()
@@ -199,6 +209,7 @@ $(document).bind("keydown.space", function(e)
 	if(gameState == "startup")
 	{
 		gameState = "init";
+		return;
 	}
 	
     var index = laneEnemyCount[player.currentLane];
@@ -405,6 +416,7 @@ var checkForEnemyCollision = function()
 					player.state = "powerup";
 				}
 				pickedElement = null;
+				break;
 			}
 			else if(collides(i,pickedElement))
 			{
@@ -413,6 +425,7 @@ var checkForEnemyCollision = function()
 			wrongsort.play();
 				highlightCell[i] = -1;
 				pickedElement = null;
+				break;
 			}
 		}
 	}
@@ -607,9 +620,4 @@ var draw = function()
 	context.fillText("Time:" + timeLeft.toFixed(2), canvas.width/2-120, 35);
 	context.font = "20px Verdana"
 	context.fillText(priorityTask.maxValue-priorityTask.count + " left", canvas.width-100, priorityTask.priority*laneSize + 200);	
-}
-
-function sleepFor( sleepDuration ){
-    var now = new Date().getTime();
-    while(new Date().getTime() < now + sleepDuration){ /* do nothing */ } 
 }
