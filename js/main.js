@@ -74,8 +74,10 @@ var player =
 	y : 100,
 	state : "standing",
 	currentAnimationKey : 0,
+	powerUpAnimationKey : 0,
 	currentLane : 0,
 	idleFrames : [],
+	powerUpImages : [],
 	
 	changeState :function (state)
 	{
@@ -118,8 +120,14 @@ var player =
 		}
 		else if (this.state == "powerup")
 		{
-			this.playIdle();
+			this.playPowerUp();
 		}
+	},
+	
+	playPowerUp : function()
+	{
+		context.drawImage(this.powerUpImages[this.powerUpAnimationKey], this.x, this.y);
+		this.powerUpAnimationKey = (this.powerUpAnimationKey+1)%16;
 	},
 	
 	playIdle : function()
@@ -157,6 +165,37 @@ function init()
 		player.idleFrames.push(new Image());
 		player.idleFrames[i].src = assests[i];
 		player.idleFrames[i].onload = function ()
+		{
+			imageLoadCount++;
+		}
+	}
+	
+	
+	var powerAssests = ['art/mailMan/powerUp/1.png',
+						'art/mailMan/powerUp/2.png',
+						'art/mailMan/powerUp/3.png',
+						'art/mailMan/powerUp/4.png',
+						'art/mailMan/powerUp/5.png',
+						'art/mailMan/powerUp/6.png',
+						'art/mailMan/powerUp/7.png',
+						'art/mailMan/powerUp/8.png',
+						'art/mailMan/powerUp/9.png',
+						'art/mailMan/powerUp/10.png',
+						'art/mailMan/powerUp/11.png',
+						'art/mailMan/powerUp/12.png',
+						'art/mailMan/powerUp/13.png',
+						'art/mailMan/powerUp/14.png',
+						'art/mailMan/powerUp/15.png',
+						'art/mailMan/powerUp/16.png',
+						];
+	
+	maxImageSize += powerAssests.length;
+	
+	for ( var i = 0; i < powerAssests.length; i++ )
+	{
+		player.powerUpImages.push(new Image());
+		player.powerUpImages[i].src = powerAssests[i];
+		player.powerUpImages[i].onload = function ()
 		{
 			imageLoadCount++;
 		}
@@ -614,6 +653,10 @@ if(gameState == "startup")
 		 StartTime = (date.getTime()/1000)/60;
 		 GameMusic.play();
 		 gameState = "playing";
+	 }
+	 else if(gameState == "init" && maxImageSize != imageLoadCount )
+	 {
+		 return;
 	 }
 	
 	spawnTimer++;
