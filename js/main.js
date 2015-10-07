@@ -45,7 +45,7 @@ var powerUpCount = 0;
 var powerUpTruck = -1;
 var truckPos = 0;
 var front = true;
-var power;
+var power; var trucknoise;
 
 var priorityTask =
 {
@@ -141,6 +141,7 @@ function init()
 	GameMusic= document.getElementById("GameMusic"); 
 	changelane= document.getElementById("Movement");
 	power=  document.getElementById("Power");
+	trucknoise= document.getElementById("Truckdrive");
 	
 	canvas = document.getElementById("myCanvas");
 	var body = document.getElementById("body");
@@ -285,6 +286,7 @@ function handlePowerUp()
 	var index = laneEnemyCount[player.currentLane];
 	if(player.state == "powerup")
 	{
+		power.volume =0.5;
 		power.play();
 		powerUpCount++;
 		if(laneOne[index].getPostionX() >= (canvas.width * 0.5) && laneOne[index].getPostionX() < 40000 && player.currentLane == 0 )
@@ -687,6 +689,7 @@ if(gameState == "startup")
 	{
 		clearInterval(refreshIntervalId);
 		gameState = "gameover";
+		isBgReady= false;
 		GameMusic.pause();
 	}		
 }
@@ -751,6 +754,7 @@ var draw = function()
 				truckPos += 30;
 				localTruckPos = (canvas.width - mailBoxes[i].width) + truckPos;
 				glowPos = localTruckPos;
+				trucknoise.play();
 				if ( localTruckPos > canvas.width+20 )
 				{
 					front = false;
