@@ -26,7 +26,7 @@ var bg;
 var isBgReady;
 var EnemyCount = [];
 var StartTime;
-var gameDuration = 2;
+var gameDuration = 2; ////////////////////////////////////////////////////////////
 var numberOfEnemiesToSpawn = 1;
 var numberOfWaves = 15;
 var waveCounter = 1;
@@ -689,7 +689,11 @@ if(gameState == "startup")
 	{
 		clearInterval(refreshIntervalId);
 		gameState = "gameover";
-		isBgReady= false;
+		context.clearRect(0, 0, canvas.width, canvas.height);
+		context.drawImage(bg,0,0 ,canvas.width,canvas.height);
+		context.font = "50px Verdana";
+	context.fillStyle='red';
+		context.fillText("Congratulations!!! Your score is :" + score,canvas.width/2 - 500,canvas.height-400);
 		GameMusic.pause();
 	}		
 }
