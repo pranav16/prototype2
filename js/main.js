@@ -228,6 +228,10 @@ function init()
 	bg.src = 'art/bg.png';
 	presspace= new Image();
 	presspace.src="art/PressSpaceToStart.png";
+	plusone= new Image();                 //////////////////////////////////////////////////////////////////
+	plusone.src= "art/Green1.png";
+	minusone=new Image();
+	minusone.src= "art/Red1.png";    
 	startUpScreen = new Image();
 	startUpScreen.src = "art/PriorityMailMenu.png";
 	startUpScreen.onload = function()
@@ -502,6 +506,9 @@ var updateLanes = function ()
 	}
 }
 
+var drawscore= false;
+var drawpenalty= false;
+
 var checkForEnemyCollision = function()
 {
 	if(pickedElement != null)
@@ -518,6 +525,7 @@ var checkForEnemyCollision = function()
 				if(collides(i,pickedElements[j]) && typeOfMailBox == typeOfPickedElement )
 				{
 					score++;
+					drawscore= true;
 					sort=document.getElementById("Sort");
 					sort.play();
 					highlightCell[i] = 1;
@@ -547,6 +555,7 @@ var checkForEnemyCollision = function()
 					}
 					
 					score--;
+					drawpenalty= true;
 					wrongsort=document.getElementById("Incorrect");
 					wrongsort.play();
 					highlightCell[i] = -1;
@@ -769,9 +778,23 @@ var draw = function()
 	    if(highlightCell[i] == 0 )	
 			context.drawImage(mailBoxes[i], localTruckPos, laneSize*i+80);
 		else if(highlightCell[i] == 1)
-			context.drawImage(correctFeedbackImages[i], localTruckPos, laneSize*i+80);
+		{
+			context.drawImage(correctFeedbackImages[i], canvas.width- mailBoxes[i].width, laneSize*i+80);
+					if (drawscore == true)
+	            {
+					context.drawImage(plusone,canvas.width - mailBoxes[i].width-50, laneSize*i+100);
+	                drawscore= false;
+	            }
+		}
 		else
-			context.drawImage(wrongFeedBackImages[i], localTruckPos, laneSize*i+80);
+		{ 
+	      context.drawImage(wrongFeedBackImages[i], canvas.width - mailBoxes[i].width, laneSize*i+80);
+		  	if (drawpenalty == true)
+	            {
+					context.drawImage(minusone,canvas.width - mailBoxes[i].width-50, laneSize*i+100);
+	                drawpenalty= false;
+	            }
+	    }
 	
         highlightCell[i] = 0;	
 	}
