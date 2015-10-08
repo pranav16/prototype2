@@ -26,7 +26,7 @@ var bg;
 var isBgReady;
 var EnemyCount = [];
 var StartTime;
-var gameDuration = 2; ////////////////////////////////////////////////////////////
+var gameDuration = 2; 
 var numberOfEnemiesToSpawn = 1;
 var numberOfWaves = 15;
 var waveCounter = 1;
@@ -229,7 +229,7 @@ function init()
 	bg.src = 'art/bg.png';
 	presspace= new Image();
 	presspace.src="art/PressSpaceToStart.png";
-	plusone= new Image();                 //////////////////////////////////////////////////////////////////
+	plusone= new Image();
 	plusone.src= "art/Green1.png";
 	minusone=new Image();
 	minusone.src= "art/Red1.png";    
@@ -356,7 +356,6 @@ $(document).bind("keydown.space", function(e)
 	
     var index = laneEnemyCount[player.currentLane];
     if(player.state == "standing")
-
 	{
 		powerUpCount++;
 		if(laneOne[index].getPostionX() >= (canvas.width * 0.5) && laneOne[index].getPostionX() < 40000 && player.currentLane == 0 )
@@ -529,9 +528,12 @@ var checkForEnemyCollision = function()
 					sort.play();
 					highlightCell[i] = 1;
 					
-					if(typeOfMailBox == priorityTask.priority)
-					{	
-						priorityTask.count++;
+					if( player.state != "powerup")
+					{
+						if(typeOfMailBox == priorityTask.priority)
+						{	
+							priorityTask.count++;
+						}
 					}
 					
 					if(priorityTask.priority > -1  && priorityTask.count >= priorityTask.maxValue)
@@ -691,7 +693,7 @@ if(gameState == "startup")
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		context.drawImage(bg,0,0 ,canvas.width,canvas.height);
 		context.font = "50px Verdana";
-	context.fillStyle='red';
+		context.fillStyle='red';
 		context.fillText("Congratulations!!! Your score is :" + score,canvas.width/2 - 500,canvas.height-400);
 		GameMusic.pause();
 	}		
@@ -788,16 +790,13 @@ var draw = function()
 		{
 			context.drawImage(correctFeedbackImages[i], canvas.width- mailBoxes[i].width, laneSize*i+80);
 			context.drawImage(plusone,canvas.width - mailBoxes[i].width-50, laneSize*i+100);
-
 		}
 		else
 		{ 
 	      context.drawImage(wrongFeedBackImages[i], canvas.width - mailBoxes[i].width, laneSize*i+80);
 		   context.drawImage(minusone,canvas.width - mailBoxes[i].width-50, laneSize*i+100);
-	               
-	            
+
 	    }
-	
         highlightCell[i] = 0;	
 	}
 	
@@ -814,15 +813,15 @@ var draw = function()
 	{
 		offset = 57;
 	}
-	
 	if (priorityTask.priority > -1 && priorityTask.priority == powerUpTruck )
 	{
 		context.drawImage(priorityHighlightBoxs[priorityTask.priority], glowPos-20, laneSize * priorityTask.priority+offset);
 	}
 	else if(priorityTask.priority > -1)
-	{
-		context.drawImage(priorityHighlightBoxs[priorityTask.priority], canvas.width-priorityHighlightBoxs[priorityTask.priority].width+22,laneSize * priorityTask.priority+offset);
-	}
+		{
+			context.drawImage(priorityHighlightBoxs[priorityTask.priority], canvas.width-priorityHighlightBoxs[priorityTask.priority].width+22,laneSize * priorityTask.priority+offset);
+		}
+	
 	
 	for(var i = 0 ; i< 4 ; i++)
 	{
@@ -840,6 +839,8 @@ var draw = function()
 	
 	context.fillText("Time:" + timeLeft.toFixed(2), canvas.width/2-120, 35);
 	context.font = "20px Verdana"
+
 	if(priorityTask.priority > -1)
 	context.fillText(priorityTask.maxValue-priorityTask.count, canvas.width-90, priorityTask.priority*laneSize + 200);	
+
 }
