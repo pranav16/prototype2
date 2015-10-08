@@ -512,6 +512,8 @@ var updateLanes = function ()
 	}
 }
 
+var drawscore= false;
+var drawpenalty= false;
 
 var checkForEnemyCollision = function()
 {
@@ -529,6 +531,7 @@ var checkForEnemyCollision = function()
 				if(collides(i,pickedElements[j]) && typeOfMailBox == typeOfPickedElement )
 				{
 					score++;
+					drawscore= true;
 					sort=document.getElementById("Sort");
 					sort.play();
 					highlightCell[i] = 1;
@@ -541,12 +544,12 @@ var checkForEnemyCollision = function()
 						}
 					}
 					
-					if(priorityTask.priority > -1  && priorityTask.count >= priorityTask.maxValue)
+					if(priorityTask.count >= priorityTask.maxValue)
 					{
 						score += 50;
 						priorityTask.count = 0;
 						powerUpTruck = priorityTask.priority;
-						priorityTask.priority = -1;
+						priorityTask.priority = Math.floor((Math.random() * 4));
 						priorityTask.maxValue = Math.floor((Math.random() * 3)+3)
 						player.state = "powerup";
 					}
@@ -555,8 +558,10 @@ var checkForEnemyCollision = function()
 				}
 				else if(collides(i,pickedElements[j]))
 				{
+
 					priorityTask.count = 0;
 					score--;
+
 					wrongsort=document.getElementById("Incorrect");
 					wrongsort.play();
 					highlightCell[i] = -1;
@@ -678,12 +683,10 @@ if(gameState == "startup")
 		spawnTimer = 0;
 	}
 
-	if(player.state != "powerup" && priorityTask.priority == -1 )
-	{
-		priorityTask.priority  = Math.floor((Math.random() * 4));
-	}
 	updatePlayer();
+
     handlePowerUp();
+
 	updateLanes();
 	draw();
 	if(checkForTime())
@@ -694,8 +697,10 @@ if(gameState == "startup")
 		context.drawImage(bg,0,0 ,canvas.width,canvas.height);
 		context.font = "50px Verdana";
 		context.fillStyle='red';
+
 		context.fillText("Congratulations!!! Your score is :" + score,canvas.width/2 - 450,canvas.height-500);
 		context.fillText("Press SPACE to restart",canvas.width/2 - 290,canvas.height-350);
+
 		GameMusic.pause();
 	}		
 }
@@ -790,14 +795,22 @@ var draw = function()
 		else if(highlightCell[i] == 1)
 		{
 			context.drawImage(correctFeedbackImages[i], canvas.width- mailBoxes[i].width, laneSize*i+80);
-			context.drawImage(plusone,canvas.width - mailBoxes[i].width-50, laneSize*i+100);
+			if (drawscore == true)
+	        {
+				context.drawImage(plusone,canvas.width - mailBoxes[i].width-50, laneSize*i+100);
+	            drawscore= false;
+	        }
 		}
 		else
 		{ 
-	      context.drawImage(wrongFeedBackImages[i], canvas.width - mailBoxes[i].width, laneSize*i+80);
-		   context.drawImage(minusone,canvas.width - mailBoxes[i].width-50, laneSize*i+100);
-
+			context.drawImage(wrongFeedBackImages[i], canvas.width - mailBoxes[i].width, laneSize*i+80);
+		  	if (drawpenalty == true)
+	        {
+				context.drawImage(minusone,canvas.width - mailBoxes[i].width-50, laneSize*i+100);
+	            drawpenalty= false;
+	        }
 	    }
+	
         highlightCell[i] = 0;	
 	}
 	
@@ -814,15 +827,18 @@ var draw = function()
 	{
 		offset = 57;
 	}
-	if (priorityTask.priority > -1 && priorityTask.priority == powerUpTruck )
+	
+	if( player.state != "powerup")
 	{
-		context.drawImage(priorityHighlightBoxs[priorityTask.priority], glowPos-20, laneSize * priorityTask.priority+offset);
-	}
-	else if(priorityTask.priority > -1)
+		if ( priorityTask.priority == powerUpTruck )
+		{
+			context.drawImage(priorityHighlightBoxs[priorityTask.priority], glowPos-20, laneSize * priorityTask.priority+offset);
+		}
+		else
 		{
 			context.drawImage(priorityHighlightBoxs[priorityTask.priority], canvas.width-priorityHighlightBoxs[priorityTask.priority].width+22,laneSize * priorityTask.priority+offset);
 		}
-	
+	}
 	
 	for(var i = 0 ; i< 4 ; i++)
 	{
@@ -840,8 +856,9 @@ var draw = function()
 	
 	context.fillText("Time:" + timeLeft.toFixed(2), canvas.width/2-120, 35);
 	context.font = "20px Verdana"
-
-	if(priorityTask.priority > -1)
-	context.fillText(priorityTask.maxValue-priorityTask.count, canvas.width-90, priorityTask.priority*laneSize + 200);	
-
+	
+	if( player.state != "powerup")
+	{
+		context.fillText(priorityTask.maxValue-priorityTask.count, canvas.width-90, priorityTask.priority*laneSize + 200);	
+	}
 }
