@@ -338,7 +338,7 @@ function handlePowerUp()
 		
 		
 		
-		if(powerUpCount > 50)
+		if(powerUpCount > 100)
 		{
 			player.state = "standing"
 			powerUpCount = 0;
