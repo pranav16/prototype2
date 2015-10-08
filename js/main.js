@@ -345,6 +345,10 @@ function handlePowerUp()
 		}
 	}
 }
+$(document).bind("keydown.c", function(e)
+{
+    location.reload();
+});
 		
 $(document).bind("keydown.space", function(e)
 { 
