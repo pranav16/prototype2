@@ -557,7 +557,7 @@ var checkForEnemyCollision = function()
 				}
 				else if(collides(i,pickedElements[j]))
 				{
-					if(typeOfMailBox == priorityTask.priority)
+					//if(typeOfMailBox == priorityTask.priority)
 					{	
 						priorityTask.count = 0;
 					}
