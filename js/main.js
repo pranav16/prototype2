@@ -700,6 +700,7 @@ if(gameState == "startup")
 		context.font = "50px Verdana";
 		context.fillStyle='red';
 		context.fillText("Congratulations!!! Your score is :" + score,canvas.width/2 - 500,canvas.height-400);
+		context.fillText("Press C to Restart",canvas.width/2 - 500,canvas.height-300);
 		GameMusic.pause();
 	}		
 }
