@@ -561,7 +561,7 @@ var checkForEnemyCollision = function()
 
 					priorityTask.count = 0;
 					score--;
-
+                    drawpenalty= true;
 					wrongsort=document.getElementById("Incorrect");
 					wrongsort.play();
 					highlightCell[i] = -1;
