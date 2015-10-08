@@ -45,8 +45,7 @@ var powerUpCount = 0;
 var powerUpTruck = -1;
 var truckPos = 0;
 var front = true;
-var power;
-var trucknoise;
+var power; var trucknoise;
 
 var priorityTask =
 {
@@ -546,7 +545,7 @@ var checkForEnemyCollision = function()
 						priorityTask.count = 0;
 						powerUpTruck = priorityTask.priority;
 						priorityTask.priority = Math.floor((Math.random() * 4));
-						priorityTask.maxValue = Math.floor((Math.random() * 3)+3);
+						priorityTask.maxValue = Math.floor((Math.random() * 3)+3)
 						player.state = "powerup";
 					}
 					
@@ -554,7 +553,7 @@ var checkForEnemyCollision = function()
 				}
 				else if(collides(i,pickedElements[j]))
 				{
-					//if(typeOfPickedElement == priorityTask.priority)
+					if(typeOfMailBox == priorityTask.priority)
 					{	
 						priorityTask.count = 0;
 					}
