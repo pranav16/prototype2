@@ -338,16 +338,17 @@ function handlePowerUp()
 		
 		
 		
-		if(powerUpCount > 100)
+		if(powerUpCount > 50)
 		{
 			player.state = "standing"
 			powerUpCount = 0;
 		}
 	}
 }
-$(document).bind("keydown.c", function(e)
+$(document).bind("keydown.space", function(e)
 {
-    location.reload();
+    if(gameState=="gameover")
+	location.reload();
 });
 		
 $(document).bind("keydown.space", function(e)
@@ -554,13 +555,8 @@ var checkForEnemyCollision = function()
 				}
 				else if(collides(i,pickedElements[j]))
 				{
-					if(typeOfMailBox == priorityTask.priority)
-					{	
-						priorityTask.count = 0;
-					}
-					
+					priorityTask.count = 0;
 					score--;
-					
 					wrongsort=document.getElementById("Incorrect");
 					wrongsort.play();
 					highlightCell[i] = -1;
@@ -698,7 +694,8 @@ if(gameState == "startup")
 		context.drawImage(bg,0,0 ,canvas.width,canvas.height);
 		context.font = "50px Verdana";
 		context.fillStyle='red';
-		context.fillText("Congratulations!!! Your score is :" + score,canvas.width/2 - 500,canvas.height-400);
+		context.fillText("Congratulations!!! Your score is :" + score,canvas.width/2 - 450,canvas.height-500);
+		context.fillText("Press SPACE to restart",canvas.width/2 - 290,canvas.height-350);
 		GameMusic.pause();
 	}		
 }
