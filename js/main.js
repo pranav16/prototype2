@@ -26,7 +26,7 @@ var bg;
 var isBgReady;
 var EnemyCount = [];
 var StartTime;
-var gameDuration = 2; ////////////////////////////////////////////////////////////
+var gameDuration = 2; 
 var numberOfEnemiesToSpawn = 1;
 var numberOfWaves = 15;
 var waveCounter = 1;
@@ -229,7 +229,7 @@ function init()
 	bg.src = 'art/bg.png';
 	presspace= new Image();
 	presspace.src="art/PressSpaceToStart.png";
-	plusone= new Image();                 //////////////////////////////////////////////////////////////////
+	plusone= new Image();
 	plusone.src= "art/Green1.png";
 	minusone=new Image();
 	minusone.src= "art/Red1.png";    
@@ -338,13 +338,18 @@ function handlePowerUp()
 		
 		
 		
-		if(powerUpCount > 100)
+		if(powerUpCount > 50)
 		{
 			player.state = "standing"
 			powerUpCount = 0;
 		}
 	}
 }
+$(document).bind("keydown.space", function(e)
+{
+    if(gameState=="gameover")
+	location.reload();
+});
 		
 $(document).bind("keydown.space", function(e)
 { 
@@ -356,7 +361,6 @@ $(document).bind("keydown.space", function(e)
 	
     var index = laneEnemyCount[player.currentLane];
     if(player.state == "standing")
-
 	{
 		powerUpCount++;
 		if(laneOne[index].getPostionX() >= (canvas.width * 0.5) && laneOne[index].getPostionX() < 40000 && player.currentLane == 0 )
@@ -532,9 +536,12 @@ var checkForEnemyCollision = function()
 					sort.play();
 					highlightCell[i] = 1;
 					
-					if(typeOfMailBox == priorityTask.priority)
-					{	
-						priorityTask.count++;
+					if( player.state != "powerup")
+					{
+						if(typeOfMailBox == priorityTask.priority)
+						{	
+							priorityTask.count++;
+						}
 					}
 					
 					if(priorityTask.count >= priorityTask.maxValue)
@@ -551,13 +558,10 @@ var checkForEnemyCollision = function()
 				}
 				else if(collides(i,pickedElements[j]))
 				{
-					if(typeOfMailBox == priorityTask.priority)
-					{	
-						priorityTask.count = 0;
-					}
-					
+
+					priorityTask.count = 0;
 					score--;
-					drawpenalty= true;
+                    drawpenalty= true;
 					wrongsort=document.getElementById("Incorrect");
 					wrongsort.play();
 					highlightCell[i] = -1;
@@ -692,8 +696,11 @@ if(gameState == "startup")
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		context.drawImage(bg,0,0 ,canvas.width,canvas.height);
 		context.font = "50px Verdana";
-	context.fillStyle='red';
-		context.fillText("Congratulations!!! Your score is :" + score,canvas.width/2 - 500,canvas.height-400);
+		context.fillStyle='red';
+
+		context.fillText("Congratulations!!! Your score is :" + score,canvas.width/2 - 450,canvas.height-500);
+		context.fillText("Press SPACE to restart",canvas.width/2 - 290,canvas.height-350);
+
 		GameMusic.pause();
 	}		
 }
@@ -788,20 +795,20 @@ var draw = function()
 		else if(highlightCell[i] == 1)
 		{
 			context.drawImage(correctFeedbackImages[i], canvas.width- mailBoxes[i].width, laneSize*i+80);
-					if (drawscore == true)
-	            {
-					context.drawImage(plusone,canvas.width - mailBoxes[i].width-50, laneSize*i+100);
-	                drawscore= false;
-	            }
+			if (drawscore == true)
+	        {
+				context.drawImage(plusone,canvas.width - mailBoxes[i].width-50, laneSize*i+100);
+	            drawscore= false;
+	        }
 		}
 		else
 		{ 
-	      context.drawImage(wrongFeedBackImages[i], canvas.width - mailBoxes[i].width, laneSize*i+80);
+			context.drawImage(wrongFeedBackImages[i], canvas.width - mailBoxes[i].width, laneSize*i+80);
 		  	if (drawpenalty == true)
-	            {
-					context.drawImage(minusone,canvas.width - mailBoxes[i].width-50, laneSize*i+100);
-	                drawpenalty= false;
-	            }
+	        {
+				context.drawImage(minusone,canvas.width - mailBoxes[i].width-50, laneSize*i+100);
+	            drawpenalty= false;
+	        }
 	    }
 	
         highlightCell[i] = 0;	
@@ -821,13 +828,16 @@ var draw = function()
 		offset = 57;
 	}
 	
-	if ( priorityTask.priority == powerUpTruck )
+	if( player.state != "powerup")
 	{
-		context.drawImage(priorityHighlightBoxs[priorityTask.priority], glowPos-20, laneSize * priorityTask.priority+offset);
-	}
-	else
-	{
-		context.drawImage(priorityHighlightBoxs[priorityTask.priority], canvas.width-priorityHighlightBoxs[priorityTask.priority].width+22,laneSize * priorityTask.priority+offset);
+		if ( priorityTask.priority == powerUpTruck )
+		{
+			context.drawImage(priorityHighlightBoxs[priorityTask.priority], glowPos-20, laneSize * priorityTask.priority+offset);
+		}
+		else
+		{
+			context.drawImage(priorityHighlightBoxs[priorityTask.priority], canvas.width-priorityHighlightBoxs[priorityTask.priority].width+22,laneSize * priorityTask.priority+offset);
+		}
 	}
 	
 	for(var i = 0 ; i< 4 ; i++)
@@ -846,5 +856,9 @@ var draw = function()
 	
 	context.fillText("Time:" + timeLeft.toFixed(2), canvas.width/2-120, 35);
 	context.font = "20px Verdana"
-	context.fillText(priorityTask.maxValue-priorityTask.count, canvas.width-90, priorityTask.priority*laneSize + 200);	
+	
+	if( player.state != "powerup")
+	{
+		context.fillText(priorityTask.maxValue-priorityTask.count, canvas.width-90, priorityTask.priority*laneSize + 200);	
+	}
 }
